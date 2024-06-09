@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 import {AppRoutingModule} from '@/app-routing.module';
 import {AppComponent} from './app.component';
@@ -46,6 +46,7 @@ import {ContentHeaderComponent} from './components/content-header/content-header
 import {LoadingComponent} from './components/loading/loading.component';
 import {OverlayLoadingComponent} from './components/overlay-loading/overlay-loading.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { TokenInterceptorService } from '@services/token-interceptor.service';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -99,6 +100,9 @@ registerLocaleData(localeEn, 'en-EN');
         // NgxGoogleAnalyticsModule.forRoot(environment.GA_ID),
         FontAwesomeModule
     ],
-    providers: [provideHttpClient(withInterceptorsFromDi())]
+    providers: [
+      provideHttpClient(withInterceptorsFromDi()),
+      {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true}
+    ]
 })
 export class AppModule {}

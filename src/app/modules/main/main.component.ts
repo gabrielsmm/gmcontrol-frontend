@@ -1,3 +1,4 @@
+import { Usuario } from '@/models/usuario.model';
 import {AppState} from '@/store/state';
 import {ToggleSidebarMenu} from '@/store/ui/actions';
 import {UiState} from '@/store/ui/state';
@@ -10,6 +11,8 @@ import {
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import { AppService } from '@services/app.service';
+import { UsuarioService } from '@services/usuario.service';
+import { ToastrService } from 'ngx-toastr';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -25,10 +28,14 @@ export class MainComponent implements OnInit, AfterViewInit {
     constructor(
         private renderer: Renderer2,
         private store: Store<AppState>,
-        private appService: AppService
+        private appService: AppService,
+        private usuarioService: UsuarioService,
+        private toastr: ToastrService
     ) {}
 
     ngOnInit() {
+      this.getUsuarioLogado();
+
       this.ui = this.store.select('ui');
       this.renderer.removeClass(
           document.querySelector('app-root'),
@@ -90,15 +97,34 @@ export class MainComponent implements OnInit, AfterViewInit {
               }
           }
       );
+    }
 
-      console.log(this.appService.usuarioLogado);
+    getUsuarioLogado() {
+      this.usuarioService.getUsuarioLogado().subscribe({
+        next: (data) => {
+          const usuarioLogado: Usuario = data as Usuario;
+          if (usuarioLogado) {
+            this.appService.usuarioLogado = usuarioLogado;
+          } else {
+            this.toastr.error('Não foi possível recuperar o usuário logado, por favor tente novamente.');
+            this.appService.deslogar();
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastr.error('Ocorreu um erro de conexão com os nossos servidores, por favor tente novamente.');
+          this.appService.deslogar();
+        }
+      });
     }
 
     onToggleMenuSidebar() {
-        this.store.dispatch(new ToggleSidebarMenu());
+      this.store.dispatch(new ToggleSidebarMenu());
     }
 
     ngAfterViewInit() {
+      setTimeout(() => {
         this.appLoaded = true;
+      });
     }
 }

@@ -33,10 +33,6 @@ export class HeaderComponent implements OnInit {
         });
     }
 
-    logout() {
-        // this.appService.logout();
-    }
-
     onToggleMenuSidebar() {
         this.store.dispatch(new ToggleSidebarMenu());
     }

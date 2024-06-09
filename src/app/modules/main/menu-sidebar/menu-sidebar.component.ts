@@ -16,7 +16,6 @@ export class MenuSidebarComponent implements OnInit {
     @HostBinding('class') classes: string = BASE_CLASSES;
     public ui: Observable<UiState>;
     public menu = MENU;
-    public usuario: Usuario;
 
     constructor(
         public appService: AppService,
@@ -28,20 +27,39 @@ export class MenuSidebarComponent implements OnInit {
         this.ui.subscribe((state: UiState) => {
             this.classes = `${BASE_CLASSES} ${state.sidebarSkin}`;
         });
-        this.usuario = this.appService.usuarioLogado;
+    }
+
+    get usuario(): Usuario {
+      return this.appService.usuarioLogado;
     }
 }
 
 export const MENU = [
     {
-        name: 'Principal',
-        iconClasses: 'fas fa-tachometer-alt',
+        name: 'Início',
+        iconClasses: 'fas fa-home',
         path: ['/']
     },
     {
-        name: 'Igrejas',
-        iconClasses: 'fas fa-file',
-        path: ['/blank']
+        name: 'Membresia Cristã',
+        iconClasses: 'fas fa-church',
+        children: [
+          {
+            name: 'Cadastros',
+            iconClasses: 'fas fa-address-card',
+            path: ['/blank']
+          },
+          {
+            name: 'Lançamentos',
+            iconClasses: 'fas fa-money-check-alt',
+            path: ['/blank']
+          },
+          {
+            name: 'Relatórios',
+            iconClasses: 'fas fa-print',
+            path: ['/blank']
+          }
+        ]
     },
     // {
     //     name: 'Main Menu',

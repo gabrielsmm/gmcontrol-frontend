@@ -9,12 +9,15 @@ import {DateTime} from 'luxon';
     styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit {
-  public usuario: Usuario;
 
   constructor(private appService: AppService) {}
 
   ngOnInit(): void {
-    this.usuario = this.appService.usuarioLogado;
+
+  }
+
+  get usuario(): Usuario {
+    return this.appService.usuarioLogado;
   }
 
   deslogar() {

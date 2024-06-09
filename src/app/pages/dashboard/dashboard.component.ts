@@ -6,7 +6,8 @@ import {
     faChartSimple,
     faCartShopping,
     faUserPlus,
-    faChartPie
+    faChartPie,
+    faChurch
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -15,10 +16,11 @@ import {
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-    faBookmark = faBookmark;
-    faEnvelope = faEnvelope;
-    faChartSimple = faChartSimple;
-    faCartShopping = faCartShopping;
-    faUserPlus = faUserPlus;
-    faChartPie = faChartPie;
+  faChurch = faChurch;
+
+  // faBookmark = faBookmark;
+  // faEnvelope = faEnvelope;
+  // faChartSimple = faChartSimple;
+  // faUserPlus = faUserPlus;
+  // faChartPie = faChartPie;
 }
