@@ -10,14 +10,14 @@ import {DateTime} from 'luxon';
 })
 export class UserComponent implements OnInit {
 
+  public usuario: Usuario;
+
   constructor(private appService: AppService) {}
 
   ngOnInit(): void {
-
-  }
-
-  get usuario(): Usuario {
-    return this.appService.usuarioLogado;
+    this.appService.getUsuarioLogado().subscribe(usuarioLogado => {
+      this.usuario = usuarioLogado;
+    });
   }
 
   deslogar() {

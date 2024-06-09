@@ -10,3 +10,9 @@ export class Usuario {
     Object.assign(this, init);
   }
 }
+
+export enum PerfilUsuario {
+  MASTER = 1,
+  ADMIN = 2,
+  USUARIO = 3
+}

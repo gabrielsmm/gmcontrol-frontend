@@ -3,7 +3,6 @@ import {AppState} from '@/store/state';
 import {ToggleSidebarMenu} from '@/store/ui/actions';
 import {UiState} from '@/store/ui/state';
 import {
-    AfterViewInit,
     Component,
     HostBinding,
     OnInit,
@@ -11,7 +10,6 @@ import {
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import { AppService } from '@services/app.service';
-import { UsuarioService } from '@services/usuario.service';
 import { ToastrService } from 'ngx-toastr';
 import {Observable} from 'rxjs';
 
@@ -20,7 +18,7 @@ import {Observable} from 'rxjs';
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit, AfterViewInit {
+export class MainComponent implements OnInit {
     @HostBinding('class') class = 'wrapper';
     public ui: Observable<UiState>;
     public appLoaded: boolean = false;
@@ -29,7 +27,6 @@ export class MainComponent implements OnInit, AfterViewInit {
         private renderer: Renderer2,
         private store: Store<AppState>,
         private appService: AppService,
-        private usuarioService: UsuarioService,
         private toastr: ToastrService
     ) {}
 
@@ -100,19 +97,11 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
 
     getUsuarioLogado() {
-      this.usuarioService.getUsuarioLogado().subscribe({
-        next: (data) => {
-          const usuarioLogado: Usuario = data as Usuario;
-          if (usuarioLogado) {
-            this.appService.usuarioLogado = usuarioLogado;
-          } else {
-            this.toastr.error('Não foi possível recuperar o usuário logado, por favor tente novamente.');
-            this.appService.deslogar();
-          }
-        },
-        error: (err) => {
-          console.error(err);
-          this.toastr.error('Ocorreu um erro de conexão com os nossos servidores, por favor tente novamente.');
+      this.appService.getUsuarioLogado().subscribe(usuario => {
+        if (usuario) {
+          this.appLoaded = true;
+        } else {
+          this.toastr.error('Não foi possível recuperar o usuário logado, por favor tente novamente.');
           this.appService.deslogar();
         }
       });
@@ -122,9 +111,4 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.store.dispatch(new ToggleSidebarMenu());
     }
 
-    ngAfterViewInit() {
-      setTimeout(() => {
-        this.appLoaded = true;
-      });
-    }
 }
