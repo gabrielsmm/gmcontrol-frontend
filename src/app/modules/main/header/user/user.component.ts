@@ -15,9 +15,7 @@ export class UserComponent implements OnInit {
   constructor(private appService: AppService) {}
 
   ngOnInit(): void {
-    this.appService.getUsuarioLogado().subscribe(usuarioLogado => {
-      this.usuario = usuarioLogado;
-    });
+    this.usuario = this.appService.getUsuarioLogado();
   }
 
   deslogar() {

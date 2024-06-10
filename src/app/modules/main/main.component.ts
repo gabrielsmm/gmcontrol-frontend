@@ -31,7 +31,7 @@ export class MainComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-      this.getUsuarioLogado();
+      this.buscarUsuarioLogado();
 
       this.ui = this.store.select('ui');
       this.renderer.removeClass(
@@ -96,8 +96,8 @@ export class MainComponent implements OnInit {
       );
     }
 
-    getUsuarioLogado() {
-      this.appService.getUsuarioLogado().subscribe(usuario => {
+    buscarUsuarioLogado() {
+      this.appService.buscarUsuarioLogado().subscribe(usuario => {
         if (usuario) {
           this.appLoaded = true;
         } else {

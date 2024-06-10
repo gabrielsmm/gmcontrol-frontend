@@ -25,10 +25,8 @@ export class MenuSidebarComponent implements OnInit {
 
     ngOnInit() {
       // obtendo o usuário logado
-      this.appService.getUsuarioLogado().subscribe(usuarioLogado => {
-        this.usuario = usuarioLogado;
-        this.filtrarMenuByPerfisUsuario(this.usuario.perfis);
-      });
+      this.usuario = this.appService.getUsuarioLogado();
+      this.menu = this.filtrarMenu(MENU);
 
       this.ui = this.store.select('ui');
       this.ui.subscribe((state: UiState) => {
@@ -36,24 +34,24 @@ export class MenuSidebarComponent implements OnInit {
       });
     }
 
-    private filtrarMenuByPerfisUsuario(perfis: []): void {
-      this.menu = this.filtrarMenu(MENU, perfis.map(perfil => perfil as PerfilUsuario));
-    }
+    private filtrarMenu(menu): any[] {
+      const menuFiltrado = [];
 
-    private filtrarMenu(menu, userProfiles: PerfilUsuario[]): [] {
-      return menu
-        .filter(item => this.possuiAcesso(item, userProfiles))
-        .map(item => ({
-          ...item,
-          children: item.children ? this.filtrarMenu(item.children, userProfiles) : undefined
-        }));
-    }
-
-    private possuiAcesso(item, perfisUsuario: PerfilUsuario[]): boolean {
-      if (!item.allowedProfiles) {
-        return true; // Se o item não tiver restrição de perfis, qualquer usuário pode acessá-lo.
+      for (const item of menu) {
+        if (this.possuiAcesso(item)) {
+          const novoItem = { ...item };
+          if (novoItem.children) {
+            novoItem.children = this.filtrarMenu(novoItem.children);
+          }
+          menuFiltrado.push(novoItem);
+        }
       }
-      return item.allowedProfiles.some(profile => perfisUsuario.includes(profile));
+
+      return menuFiltrado;
+    }
+
+    private possuiAcesso({ allowedProfiles }): boolean {
+      return !allowedProfiles || this.appService.usuarioPossuiAlgumPerfil(allowedProfiles);
     }
 
 }

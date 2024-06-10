@@ -21,7 +21,7 @@ export class AppService {
 
   }
 
-  getUsuarioLogado(): Observable<Usuario | null> {
+  buscarUsuarioLogado(): Observable<Usuario | null> {
     if (this.usuarioLogado) {
       return of(this.usuarioLogado);
     }
@@ -39,22 +39,21 @@ export class AppService {
     );
   }
 
-  getPerfisUsuarioLogado(): Observable<PerfilUsuario[]> {
-    return this.getUsuarioLogado().pipe(
-      map(usuario => usuario ? usuario.perfis.map(perfil => perfil as PerfilUsuario) : [])
-    );
+  getUsuarioLogado(): Usuario {
+    return this.usuarioLogado;
   }
 
-  possuiPerfil(perfil: PerfilUsuario): Observable<boolean> {
-    return this.getPerfisUsuarioLogado().pipe(
-      map(perfisUsuario => perfisUsuario.includes(perfil))
-    );
+  getPerfisUsuarioLogado(): PerfilUsuario[] {
+    if (!this.usuarioLogado) return [];
+    return this.usuarioLogado.perfis.map(perfil => perfil as PerfilUsuario);
   }
 
-  possuiAlgumPerfil(perfis: PerfilUsuario[]): Observable<boolean> {
-    return this.getPerfisUsuarioLogado().pipe(
-      map(perfisUsuario => perfisUsuario.some(perfil => perfis.includes(perfil)))
-    );
+  usuarioPossuiPerfil(perfil: PerfilUsuario): boolean {
+    return this.getPerfisUsuarioLogado().includes(perfil);
+  }
+
+  usuarioPossuiAlgumPerfil(perfis: PerfilUsuario[]): boolean {
+    return this.getPerfisUsuarioLogado().some(perfil => perfis.includes(perfil));
   }
 
   deslogar() {
