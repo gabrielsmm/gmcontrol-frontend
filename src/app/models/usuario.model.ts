@@ -5,7 +5,7 @@ export class Usuario {
   email: string
   status: number
   senha: string
-  perfis: []
+  perfis: number[]
 
   public constructor(init?: Partial<any>) {
     Object.assign(this, init);

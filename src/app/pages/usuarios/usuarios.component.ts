@@ -1,8 +1,10 @@
+import { OperacaoCadastro } from './../../models/enums/operacao-cadastro.enum';
 import { State } from '@/models/enums/state.enum';
 import { Usuario } from '@/models/usuario.model';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { UsuarioService } from '@services/usuario.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-usuarios',
@@ -13,6 +15,7 @@ export class UsuariosComponent implements OnInit {
 
   public State = State;
   public stateAtual: State = State.StateGrid;
+  public operacaoCadastro: OperacaoCadastro = null;
   public usuarios: Usuario[] = [];
 
   public dadosForm: UntypedFormGroup = new UntypedFormGroup({
@@ -20,7 +23,13 @@ export class UsuariosComponent implements OnInit {
     nome: new UntypedFormControl(null, Validators.required),
     email: new UntypedFormControl(null, Validators.required),
     nomeUsuario: new UntypedFormControl(null, Validators.required),
-    senha: new UntypedFormControl(null, Validators.required)
+    senha: new UntypedFormControl(null, Validators.required),
+    status: new UntypedFormControl(1, Validators.required),
+    perfis: new UntypedFormArray([
+      new UntypedFormControl(), // Perfil 1
+      new UntypedFormControl(), // Perfil 2
+      new UntypedFormControl()  // Perfil 3
+    ])
   });
 
   // paginação
@@ -30,7 +39,14 @@ export class UsuariosComponent implements OnInit {
   public last: boolean;
   public totalElements = 0;
 
-  constructor(private usuarioService: UsuarioService) {
+  public listaStatus = [
+    { id: 1, descricao: 'Ativo' },
+    { id: 2, descricao: 'Inativo' }
+  ]
+
+  constructor(private usuarioService: UsuarioService,
+              private toastr: ToastrService
+  ) {
 
   }
 
@@ -59,33 +75,134 @@ export class UsuariosComponent implements OnInit {
   }
 
   inserirClick() {
-    this.dadosForm.reset();
+    this.dadosForm.reset({
+      status: 1
+    });
     this.stateAtual = State.StateDados;
-  }
-
-  salvarClick() {
-
+    this.operacaoCadastro = OperacaoCadastro.INSERIR;
   }
 
   alterarClick(usuario: Usuario) {
-    console.log(usuario);
-    this.stateAtual = State.StateDados;
-    // getDados
-    this.dadosForm.patchValue({
-      id: usuario.id,
-      nome: usuario.nome,
-      email: usuario.email,
-      nomeUsuario: usuario.nomeUsuario,
-      senha: usuario.senha
+    this.usuarioService.findById(usuario.id).subscribe({
+      next: (data) => {
+        const usuarioRecuperado = data as Usuario;
+        this.stateAtual = State.StateDados;
+        this.operacaoCadastro = OperacaoCadastro.ALTERAR;
+        this.dadosForm.patchValue({
+          id: usuarioRecuperado.id,
+          nome: usuarioRecuperado.nome,
+          email: usuarioRecuperado.email,
+          nomeUsuario: usuarioRecuperado.nomeUsuario,
+          senha: usuarioRecuperado.senha,
+          status: usuarioRecuperado.status
+        });
+        this.markPerfis(usuarioRecuperado.perfis);
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Erro ao buscar as informações do usuário!');
+      }
+    });
+  }
+
+  salvarClick() {
+    let usuario = new Usuario(this.dadosForm.value);
+    usuario.perfis = usuario.perfis.filter(item => item !== null);
+    if (this.ehInserir()) {
+      this.inserirUsuario(usuario);
+    } else {
+      this.alterarUsuario(usuario);
+    }
+  }
+
+  private inserirUsuario(usuario: Usuario) {
+    this.usuarioService.create(usuario).subscribe({
+      next: (data) => {
+        this.toastr.success('Usuário inserido com sucesso!');
+        this.stateAtual = State.StateGrid;
+        this.operacaoCadastro = null;
+        this.getLista();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Erro ao inserir o usuário!');
+      }
+    });
+  }
+
+  private alterarUsuario(usuario: Usuario) {
+    this.usuarioService.update(usuario).subscribe({
+      next: (data) => {
+        this.toastr.success('Usuário alterado com sucesso!');
+        this.stateAtual = State.StateGrid;
+        this.operacaoCadastro = null;
+        this.getLista();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Erro ao alterar o usuário!');
+      }
     });
   }
 
   eliminarClick(usuario: Usuario) {
-    console.log(usuario);
+    if (confirm(`Realmente deseja excluir o usuário ${usuario.nome}?`)) {
+      this.usuarioService.delete(usuario.id).subscribe({
+        next: (data) => {
+          this.getLista();
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastr.error('Erro ao excluir o usuário!');
+        }
+      });
+    }
   }
 
   cancelarClick() {
     this.stateAtual = State.StateGrid;
+    this.operacaoCadastro = null;
+  }
+
+  ehInserir(): boolean {
+    return this.operacaoCadastro === OperacaoCadastro.INSERIR;
+  }
+
+  ehAlterar(): boolean {
+    return this.operacaoCadastro === OperacaoCadastro.ALTERAR;
+  }
+
+  get perfisFormArray() {
+    return this.dadosForm.get('perfis') as UntypedFormArray;
+  }
+
+  onCheckboxChange(e: any, index: number) {
+    const perfis: UntypedFormArray = this.dadosForm.get('perfis') as UntypedFormArray;
+    const perfilValue = Number(e.target.value);
+
+    if (e.target.checked) {
+      perfis.at(index).setValue(Number(perfilValue));
+    } else {
+      perfis.at(index).setValue(null);
+    }
+  }
+
+  private markPerfis(perfisSelecionados: number[]) {
+    const perfisFormArray = this.dadosForm.get('perfis') as UntypedFormArray;
+
+    perfisFormArray.controls.forEach((control: UntypedFormControl) => {
+      control.setValue(null);
+    });
+
+    perfisSelecionados.forEach((perfilIndex: number) => {
+      if (perfilIndex >= 1 && perfilIndex <= perfisFormArray.length) {
+        perfisFormArray.at(perfilIndex - 1).setValue(perfilIndex);
+      }
+    });
+  }
+
+  displayStatus(status: number): string {
+    return this.listaStatus.find((s) => s.id === status).descricao;
   }
 
 }

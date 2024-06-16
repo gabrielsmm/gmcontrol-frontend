@@ -52,7 +52,7 @@
                     <td>{{ usuario.nome }}</td>
                     <td>{{ usuario.nomeUsuario }}</td>
                     <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.status }}</td>
+                    <td>{{ displayStatus(usuario.status) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -79,18 +79,16 @@
               <button class="btn btn-danger" (click)="cancelarClick()">Cancelar</button>
             </div>
             <form [formGroup]="dadosForm">
-              <div class="row mb-2">
+              <div class="row mb-2" *ngIf="ehAlterar()">
                 <div class="col-md-2">
                   <input formControlName="id" type="number" class="form-control" placeholder="ID" [readonly]="true"/>
                 </div>
               </div>
               <div class="row mb-2">
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <input formControlName="nome" type="text" class="form-control" placeholder="Nome"/>
                 </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <input formControlName="email" type="email" class="form-control" placeholder="E-mail"/>
                 </div>
               </div>
@@ -102,6 +100,36 @@
               <div class="row mb-2">
                 <div class="col-md-4">
                   <input formControlName="senha" type="password" class="form-control" placeholder="Senha"/>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="status">Status</label>
+                    <select formControlName="status" class="form-control" id="status">
+                      <option value="1">Ativo</option>
+                      <option value="2">Inativo</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-12" formArrayName="perfis">
+                  <label class="d-block">Perfis</label>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" formControlName="0" value="1" (change)="onCheckboxChange($event, 0)">
+                    <label class="form-check-label" for="master">Master</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" formControlName="1" value="2" (change)="onCheckboxChange($event, 1)">
+                    <label class="form-check-label" for="admin">Administrador</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" formControlName="2" value="3" (change)="onCheckboxChange($event, 2)">
+                    <label class="form-check-label" for="usuario">Usuário</label>
+                  </div>
                 </div>
               </div>
             </form>
