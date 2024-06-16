@@ -1,8 +1,9 @@
 export class Usuario {
   id: number
   nome: string
-  usuario: string
+  nomeUsuario: string
   email: string
+  status: number
   senha: string
   perfis: []
 

@@ -11,6 +11,7 @@ import {NonAuthGuard} from '@guards/non-auth.guard';
 import {ForgotPasswordComponent} from '@modules/forgot-password/forgot-password.component';
 import {RecoverPasswordComponent} from '@modules/recover-password/recover-password.component';
 import {SubMenuComponent} from '@pages/main-menu/sub-menu/sub-menu.component';
+import { UsuariosComponent } from '@pages/usuarios/usuarios.component';
 
 const routes: Routes = [
     {
@@ -19,6 +20,10 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         children: [
+            {
+              path: '',
+              component: DashboardComponent
+            },
             {
                 path: 'profile',
                 component: ProfileComponent
@@ -36,9 +41,9 @@ const routes: Routes = [
                 component: BlankComponent
             },
             {
-                path: '',
-                component: DashboardComponent
-            }
+              path: 'usuarios',
+              component: UsuariosComponent
+            },
         ]
     },
     {

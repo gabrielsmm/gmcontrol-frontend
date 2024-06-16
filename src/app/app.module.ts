@@ -47,6 +47,7 @@ import {LoadingComponent} from './components/loading/loading.component';
 import {OverlayLoadingComponent} from './components/overlay-loading/overlay-loading.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { TokenInterceptorService } from '@services/token-interceptor.service';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -81,7 +82,8 @@ registerLocaleData(localeEn, 'en-EN');
         SmallBoxComponent,
         ContentHeaderComponent,
         LoadingComponent,
-        OverlayLoadingComponent
+        OverlayLoadingComponent,
+        UsuariosComponent
     ],
     bootstrap: [AppComponent],
     imports: [

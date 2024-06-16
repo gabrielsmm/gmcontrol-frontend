@@ -1,0 +1,141 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+      <div class="row mb-2">
+          <div class="col-sm-6">
+              <h1>Usuários</h1>
+          </div>
+          <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                  <li class="breadcrumb-item"><a href="#">Início</a></li>
+                  <li class="breadcrumb-item active">Usuários</li>
+              </ol>
+          </div>
+      </div>
+  </div>
+  <!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+  <!-- Default box -->
+  <div class="container-fluid">
+      <div class="card p-2">
+        <div [ngSwitch]="stateAtual">
+          <div *ngSwitchCase="State.StateGrid">
+            <div class="mb-3">
+              <button class="btn btn-success" (click)="inserirClick()">Inserir</button>
+            </div>
+            <div class="table-responsive p-0">
+              <table class="table table-head-fixed table-hover text-nowrap">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Usuário (login)</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let usuario of usuarios">
+                    <td>
+                      <button (click)="alterarClick(usuario)" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button (click)="eliminarClick(usuario)" class="btn btn-sm btn-danger ml-1">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </td>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nome }}</td>
+                    <td>{{ usuario.nomeUsuario }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.status }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row d-flex justify-content-center">
+              <nav>
+                <ul class="pagination">
+                    <li class="page-item" [ngClass]="{'disabled': first}">
+                      <button class="page-link" (click)="atualizarPagina(page - 1)">Anterior</button>
+                    </li>
+                    <li class="page-item disabled">
+                      <span class="page-link">{{page + 1}}</span>
+                    </li>
+                    <li class="page-item" [ngClass]="{'disabled': last}">
+                      <button class="page-link" (click)="atualizarPagina(page + 1)">Próxima</button>
+                    </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+          <div *ngSwitchCase="State.StateDados">
+            <div class="mb-3">
+              <button class="btn btn-primary mr-2" (click)="salvarClick()">Salvar</button>
+              <button class="btn btn-danger" (click)="cancelarClick()">Cancelar</button>
+            </div>
+            <form [formGroup]="dadosForm">
+              <div class="row mb-2">
+                <div class="col-md-2">
+                  <input formControlName="id" type="number" class="form-control" placeholder="ID" [readonly]="true"/>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-12">
+                  <input formControlName="nome" type="text" class="form-control" placeholder="Nome"/>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-12">
+                  <input formControlName="email" type="email" class="form-control" placeholder="E-mail"/>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-4">
+                  <input formControlName="nomeUsuario" type="text" class="form-control" placeholder="Nome de usuário"/>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-4">
+                  <input formControlName="senha" type="password" class="form-control" placeholder="Senha"/>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+          <!-- <div class="card-header">
+              <h3 class="card-title">Title</h3>
+
+              <div class="card-tools">
+                  <button
+                      type="button"
+                      class="btn btn-tool"
+                      data-widget="collapse"
+                      data-toggle="tooltip"
+                      title="Collapse"
+                  >
+                      <i class="fa fa-minus"></i>
+                  </button>
+                  <button
+                      type="button"
+                      class="btn btn-tool"
+                      data-widget="remove"
+                      data-toggle="tooltip"
+                      title="Remove"
+                  >
+                      <i class="fa fa-times"></i>
+                  </button>
+              </div>
+          </div> -->
+          <!-- /.card-body -->
+          <!-- <div class="card-footer">Footer</div> -->
+          <!-- /.card-footer-->
+      </div>
+  </div>
+  <!-- /.card -->
+</section>
+<!-- /.content -->

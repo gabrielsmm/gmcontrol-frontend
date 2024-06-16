@@ -65,7 +65,7 @@ export const MENU = [
     {
       name: 'Usuários',
       iconClasses: 'fas fa-user',
-      path: ['/blank'],
+      path: ['/usuarios'],
       allowedProfiles: [PerfilUsuario.MASTER, PerfilUsuario.ADMIN]
     },
     {
