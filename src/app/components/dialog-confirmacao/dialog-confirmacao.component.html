@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>{{data.titulo}}</h2>
+<mat-dialog-content>
+  <p>{{data.texto}}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="btn btn-danger mr-2" (click)="cancelarClick()">Cancelar</button>
+  <button class="btn btn-success" cdkFocusInitial (click)="confirmarClick()">Confirmar</button>
+</mat-dialog-actions>

@@ -34,8 +34,6 @@ import {authReducer} from './store/auth/reducer';
 import {uiReducer} from './store/ui/reducer';
 import {ProfabricComponentsModule} from '@profabric/angular-components';
 import {SidebarSearchComponent} from './components/sidebar-search/sidebar-search.component';
-import {NgxGoogleAnalyticsModule} from 'ngx-google-analytics';
-import {environment} from 'environments/environment';
 import {ActivityTabComponent} from './pages/profile/activity-tab/activity-tab.component';
 import {TimelineTabComponent} from './pages/profile/timeline-tab/timeline-tab.component';
 import {SettingsTabComponent} from './pages/profile/settings-tab/settings-tab.component';
@@ -47,7 +45,7 @@ import {LoadingComponent} from './components/loading/loading.component';
 import {OverlayLoadingComponent} from './components/overlay-loading/overlay-loading.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { TokenInterceptorService } from '@services/token-interceptor.service';
-import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -82,8 +80,7 @@ registerLocaleData(localeEn, 'en-EN');
         SmallBoxComponent,
         ContentHeaderComponent,
         LoadingComponent,
-        OverlayLoadingComponent,
-        UsuariosComponent
+        OverlayLoadingComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -104,7 +101,8 @@ registerLocaleData(localeEn, 'en-EN');
     ],
     providers: [
       provideHttpClient(withInterceptorsFromDi()),
-      {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true}
+      {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true},
+      provideAnimationsAsync()
     ]
 })
 export class AppModule {}

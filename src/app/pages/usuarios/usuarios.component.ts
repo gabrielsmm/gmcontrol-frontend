@@ -1,15 +1,33 @@
 import { OperacaoCadastro } from './../../models/enums/operacao-cadastro.enum';
 import { State } from '@/models/enums/state.enum';
 import { Usuario } from '@/models/usuario.model';
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { UsuarioService } from '@services/usuario.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { DialogConfirmacaoComponent } from '@components/dialog-confirmacao/dialog-confirmacao.component';
 
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
-  styleUrl: './usuarios.component.scss'
+  styleUrl: './usuarios.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatTooltipModule
+  ]
 })
 export class UsuariosComponent implements OnInit {
 
@@ -43,6 +61,8 @@ export class UsuariosComponent implements OnInit {
     { id: 1, descricao: 'Ativo' },
     { id: 2, descricao: 'Inativo' }
   ]
+
+  readonly dialog = inject(MatDialog);
 
   constructor(private usuarioService: UsuarioService,
               private toastr: ToastrService
@@ -146,22 +166,36 @@ export class UsuariosComponent implements OnInit {
   }
 
   eliminarClick(usuario: Usuario) {
-    if (confirm(`Realmente deseja excluir o usuário ${usuario.nome}?`)) {
-      this.usuarioService.delete(usuario.id).subscribe({
-        next: (data) => {
-          this.getLista();
-        },
-        error: (err) => {
-          console.error(err);
-          this.toastr.error('Erro ao excluir o usuário!');
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(DialogConfirmacaoComponent, {
+      data: {
+        titulo: 'Confirmar exclusão',
+        texto: `Realmente deseja excluir o usuário ${usuario.nome}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.usuarioService.delete(usuario.id).subscribe({
+          next: (data) => {
+            this.toastr.success('Usuário excluído com sucesso!');
+            this.getLista();
+          },
+          error: (err) => {
+            console.error(err);
+            this.toastr.error('Erro ao excluir o usuário!');
+          }
+        });
+      }
+    });
   }
 
   cancelarClick() {
     this.stateAtual = State.StateGrid;
     this.operacaoCadastro = null;
+  }
+
+  openModulos(usuario: Usuario) {
+
   }
 
   ehInserir(): boolean {
