@@ -56,6 +56,10 @@ export class AppService {
     return this.getPerfisUsuarioLogado().some(perfil => perfis.includes(perfil));
   }
 
+  formatarErrosValidacao(erros: any[]): string {
+    return erros.map(erro => erro.mensagem).join('<br>');
+  }
+
   deslogar() {
     this.usuarioAutenticado = false;
     this.usuarioLogado = null;

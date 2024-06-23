@@ -7,16 +7,9 @@ import { ReactiveFormsModule, UntypedFormArray, UntypedFormControl, UntypedFormG
 import { UsuarioService } from '@services/usuario.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmacaoComponent } from '@components/dialog-confirmacao/dialog-confirmacao.component';
+import { AppService } from '@services/app.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -65,7 +58,8 @@ export class UsuariosComponent implements OnInit {
   readonly dialog = inject(MatDialog);
 
   constructor(private usuarioService: UsuarioService,
-              private toastr: ToastrService
+              private toastr: ToastrService,
+              private appService: AppService
   ) {
 
   }
@@ -145,7 +139,7 @@ export class UsuariosComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.toastr.error('Erro ao inserir o usuário!');
+        this.toastr.error(this.appService.formatarErrosValidacao(err.error.erros), '', { enableHtml: true });
       }
     });
   }
@@ -160,7 +154,7 @@ export class UsuariosComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.toastr.error('Erro ao alterar o usuário!');
+        this.toastr.error(this.appService.formatarErrosValidacao(err.error.erros), '', { enableHtml: true });
       }
     });
   }
