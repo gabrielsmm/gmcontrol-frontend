@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmacaoComponent } from '@components/dialog-confirmacao/dialog-confirmacao.component';
 import { AppService } from '@services/app.service';
+import { UsuariosModulosComponent } from './usuarios-modulos/usuarios-modulos.component';
 
 @Component({
   selector: 'app-usuarios',
@@ -189,7 +190,12 @@ export class UsuariosComponent implements OnInit {
   }
 
   openModulos(usuario: Usuario) {
-
+    this.dialog.open(UsuariosModulosComponent, {
+      height: '800px',
+      width: '800px',
+      maxWidth: '100vw',
+      data: usuario
+    });
   }
 
   ehInserir(): boolean {
