@@ -1,8 +1,8 @@
 import { UsuarioModuloAcesso } from '@/models/usuario-modulo-acesso.model';
 import { Usuario } from '@/models/usuario.model';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UsuarioModuloService } from '@services/usuario-modulo.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -10,18 +10,16 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-usuarios-modulos',
   standalone: true,
   imports: [
-    CommonModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions
+    CommonModule
   ],
   templateUrl: './usuarios-modulos.component.html',
   styleUrl: './usuarios-modulos.component.scss'
 })
 export class UsuariosModulosComponent implements OnInit {
 
-  readonly dialogRef = inject(MatDialogRef<UsuariosModulosComponent>);
-  readonly usuario = inject<Usuario>(MAT_DIALOG_DATA);
+  @Input() usuario: Usuario;
+
+  activeModal = inject(NgbActiveModal);
 
   public usuariosModulos: UsuarioModuloAcesso[] = [];
 
@@ -65,7 +63,7 @@ export class UsuariosModulosComponent implements OnInit {
   }
 
   fecharClick(): void {
-    this.dialogRef.close();
+    this.activeModal.close();
   }
 
 }

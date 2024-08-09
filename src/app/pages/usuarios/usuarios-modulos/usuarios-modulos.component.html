@@ -1,8 +1,8 @@
-<div class="d-flex justify-content-end pt-3 pr-3">
+<div class="modal-header">
+  <h5 class="modal-title">Módulos do usuário {{usuario.nome}}</h5>
   <button class="btn btn-danger" (click)="fecharClick()">Fechar</button>
 </div>
-<h2 mat-dialog-title>Módulos do usuário {{usuario.nome}}</h2>
-<mat-dialog-content>
+<div class="modal-body">
   <div class="table-responsive p-0">
     <table class="table table-head-fixed table-hover text-nowrap">
       <thead>
@@ -23,4 +23,4 @@
       </tbody>
     </table>
   </div>
-</mat-dialog-content>
+</div>

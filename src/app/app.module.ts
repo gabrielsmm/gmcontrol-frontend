@@ -46,6 +46,7 @@ import {OverlayLoadingComponent} from './components/overlay-loading/overlay-load
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { TokenInterceptorService } from '@services/token-interceptor.service';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -97,7 +98,8 @@ registerLocaleData(localeEn, 'en-EN');
             preventDuplicates: true
         }),
         // NgxGoogleAnalyticsModule.forRoot(environment.GA_ID),
-        FontAwesomeModule
+        FontAwesomeModule,
+        NgbModule
     ],
     providers: [
       provideHttpClient(withInterceptorsFromDi()),
