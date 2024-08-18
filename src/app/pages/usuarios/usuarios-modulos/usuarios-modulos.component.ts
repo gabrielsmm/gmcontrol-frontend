@@ -1,8 +1,9 @@
 import { UsuarioModuloAcesso } from '@/models/usuario-modulo-acesso.model';
 import { Usuario } from '@/models/usuario.model';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { AppService } from '@services/app.service';
 import { UsuarioModuloService } from '@services/usuario-modulo.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -15,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './usuarios-modulos.component.html',
   styleUrl: './usuarios-modulos.component.scss'
 })
-export class UsuariosModulosComponent implements OnInit {
+export class UsuariosModulosComponent implements OnInit, OnDestroy {
 
   @Input() usuario: Usuario;
 
@@ -24,13 +25,19 @@ export class UsuariosModulosComponent implements OnInit {
   public usuariosModulos: UsuarioModuloAcesso[] = [];
 
   constructor(private usuarioModuloService: UsuarioModuloService,
-              private toastr: ToastrService
+              private toastr: ToastrService,
+              private appService: AppService
   ) {
 
   }
 
   ngOnInit(): void {
     this.getLista();
+  }
+
+  ngOnDestroy(): void {
+    this.appService.buscarUsuarioLogado(true).subscribe();
+    // TODO: Notificar menu-sidebar para recarregar a lista do menu
   }
 
   private getLista() {

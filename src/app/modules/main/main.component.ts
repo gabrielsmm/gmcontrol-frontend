@@ -99,6 +99,7 @@ export class MainComponent implements OnInit {
     buscarUsuarioLogado() {
       this.appService.buscarUsuarioLogado().subscribe(usuario => {
         if (usuario) {
+          console.log(usuario);
           this.appLoaded = true;
         } else {
           this.toastr.error('Não foi possível recuperar o usuário logado, por favor tente novamente.');

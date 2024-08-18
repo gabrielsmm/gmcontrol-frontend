@@ -1,4 +1,6 @@
-import { PerfilUsuario, Usuario } from '@/models/usuario.model';
+import { UsuarioModulo } from '@/models/enums/usuario-modulo.enum';
+import { UsuarioPerfil } from '@/models/enums/usuario-perfil.enum';
+import { Usuario } from '@/models/usuario.model';
 import {AppState} from '@/store/state';
 import {UiState} from '@/store/ui/state';
 import {Component, HostBinding, OnInit} from '@angular/core';
@@ -50,8 +52,8 @@ export class MenuSidebarComponent implements OnInit {
       return menuFiltrado;
     }
 
-    private possuiAcesso({ allowedProfiles }): boolean {
-      return !allowedProfiles || this.appService.usuarioPossuiAlgumPerfil(allowedProfiles);
+    private possuiAcesso({ allowedProfiles, module }): boolean {
+      return this.appService.usuarioPossuiAlgumPerfil(allowedProfiles) || this.appService.usuarioPossuiModulo(module);
     }
 
 }
@@ -66,25 +68,29 @@ export const MENU = [
       name: 'Usuários',
       iconClasses: 'fas fa-user',
       path: ['/usuarios'],
-      allowedProfiles: [PerfilUsuario.MASTER, PerfilUsuario.ADMIN]
+      allowedProfiles: [UsuarioPerfil.MASTER, UsuarioPerfil.ADMIN]
     },
     {
         name: 'Membresia Cristã',
         iconClasses: 'fas fa-church',
+        module: UsuarioModulo.MEMBRESIA_CRISTA,
         children: [
           {
             name: 'Cadastros',
             iconClasses: 'fas fa-address-card',
+            module: UsuarioModulo.MEMBRESIA_CRISTA,
             path: ['/blank']
           },
           {
             name: 'Lançamentos',
             iconClasses: 'fas fa-money-check-alt',
+            module: UsuarioModulo.MEMBRESIA_CRISTA,
             path: ['/blank']
           },
           {
             name: 'Relatórios',
             iconClasses: 'fas fa-print',
+            module: UsuarioModulo.MEMBRESIA_CRISTA,
             path: ['/blank']
           }
         ]

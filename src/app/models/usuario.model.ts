@@ -6,14 +6,9 @@ export class Usuario {
   status: number
   senha: string
   perfis: number[]
+  usuarioModulos: number[]
 
   public constructor(init?: Partial<any>) {
     Object.assign(this, init);
   }
-}
-
-export enum PerfilUsuario {
-  MASTER = 1,
-  ADMIN = 2,
-  USUARIO = 3
 }

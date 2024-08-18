@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import { PerfilUsuario, Usuario } from '@/models/usuario.model';
-import { Observable, catchError, map, of, shareReplay } from 'rxjs';
+import { Usuario } from '@/models/usuario.model';
+import { Observable, catchError, map, of } from 'rxjs';
 import { UsuarioService } from './usuario.service';
+import { UsuarioPerfil } from '@/models/enums/usuario-perfil.enum';
+import { UsuarioModulo } from '@/models/enums/usuario-modulo.enum';
 
 @Injectable({
     providedIn: 'root'
@@ -21,8 +23,8 @@ export class AppService {
 
   }
 
-  buscarUsuarioLogado(): Observable<Usuario | null> {
-    if (this.usuarioLogado) {
+  buscarUsuarioLogado(forcarBusca: boolean = false): Observable<Usuario | null> {
+    if (!forcarBusca && this.usuarioLogado) {
       return of(this.usuarioLogado);
     }
     return this.usuarioService.getUsuarioLogado().pipe(
@@ -43,17 +45,36 @@ export class AppService {
     return this.usuarioLogado;
   }
 
-  getPerfisUsuarioLogado(): PerfilUsuario[] {
+  // Operações referentes aos perfis do usuário
+  getPerfisUsuarioLogado(): UsuarioPerfil[] {
     if (!this.usuarioLogado) return [];
-    return this.usuarioLogado.perfis.map(perfil => perfil as PerfilUsuario);
+    return this.usuarioLogado.perfis.map(perfil => perfil as UsuarioPerfil);
   }
 
-  usuarioPossuiPerfil(perfil: PerfilUsuario): boolean {
+  usuarioPossuiPerfil(perfil: UsuarioPerfil): boolean {
+    if (!perfil) return false;
     return this.getPerfisUsuarioLogado().includes(perfil);
   }
 
-  usuarioPossuiAlgumPerfil(perfis: PerfilUsuario[]): boolean {
+  usuarioPossuiAlgumPerfil(perfis: UsuarioPerfil[]): boolean {
+    if (!perfis) return false;
     return this.getPerfisUsuarioLogado().some(perfil => perfis.includes(perfil));
+  }
+
+  // Operações referentes aos módulos do usuário
+  getModulosUsuarioLogado(): UsuarioModulo[] {
+    if (!this.usuarioLogado) return [];
+    return this.usuarioLogado.usuarioModulos.map(modulo => modulo as UsuarioModulo);
+  }
+
+  usuarioPossuiModulo(modulo: UsuarioModulo): boolean {
+    if (!modulo) return false;
+    return this.getModulosUsuarioLogado().includes(modulo);
+  }
+
+  usuarioPossuiAlgumModulo(modulos: UsuarioModulo[]): boolean {
+    if (!modulos) return false;
+    return this.getModulosUsuarioLogado().some(modulo => modulos.includes(modulo));
   }
 
   formatarErrosValidacao(erros: any[]): string {
