@@ -1,5 +1,6 @@
+import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
 import { Usuario } from '@/models/usuario.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
@@ -27,12 +28,18 @@ export class UsuarioService {
     return this.http.get<Usuario>(url);
   }
 
-  findPage(page: number = 0, linesPerPage?: number, orderBy?: string, direction?: string): Observable<any>{
-    let url = `${this.getApiUrl()}/page?page=${page}`;
-    if (linesPerPage) url += `&linesPerPage=${linesPerPage}`;
-    if (orderBy) url += `&linesPerPage=${orderBy}`;
-    if (direction) url += `&linesPerPage=${direction}`;
-    return this.http.get<any>(url);
+  findPage(filtro: FiltroListaPaginada): Observable<any>{
+    let url = `${this.getApiUrl()}/page`;
+    let params = new HttpParams();
+
+    Object.keys(filtro).forEach(key => {
+      const value = filtro[key as keyof FiltroListaPaginada];
+      if (value !== undefined && value !== null) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    return this.http.get<any>(url, { params });
   }
 
   create(usuario: Usuario): Observable<Usuario>{

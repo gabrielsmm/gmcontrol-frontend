@@ -2,8 +2,8 @@ import { OperacaoCadastro } from './../../models/enums/operacao-cadastro.enum';
 import { State } from '@/models/enums/state.enum';
 import { Usuario } from '@/models/usuario.model';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { UsuarioService } from '@services/usuario.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -11,6 +11,8 @@ import { ModalConfirmacaoComponent } from '@components/modal-confirmacao/modal-c
 import { AppService } from '@services/app.service';
 import { UsuariosModulosComponent } from './usuarios-modulos/usuarios-modulos.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-usuarios',
@@ -19,11 +21,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MatTooltipModule
   ]
 })
-export class UsuariosComponent implements OnInit {
+export class UsuariosComponent implements OnInit, OnDestroy {
 
   public State = State;
   public stateAtual: State = State.StateGrid;
@@ -51,6 +54,10 @@ export class UsuariosComponent implements OnInit {
   public last: boolean;
   public totalElements = 0;
 
+  public filtroListaPaginada: FiltroListaPaginada = new FiltroListaPaginada();
+  private filtroSubject = new Subject<string>();
+  private filtroSubscription = new Subscription();
+
   public listaStatus = [
     { id: 1, descricao: 'Ativo' },
     { id: 2, descricao: 'Inativo' }
@@ -66,12 +73,22 @@ export class UsuariosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Validar login
+    this.filtroSubscription = this.filtroSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.refresh();
+    });
+
     this.getLista();
   }
 
-  private getLista(page?: number) {
-    this.usuarioService.findPage(page).subscribe({
+  ngOnDestroy(): void {
+    this.filtroSubscription.unsubscribe();
+  }
+
+  private getLista() {
+    this.usuarioService.findPage(this.filtroListaPaginada).subscribe({
       next: (data) => {
         this.usuarios = data.content;
         this.first = data.first;
@@ -84,9 +101,20 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
+  refresh() {
+    this.getLista();
+  }
+
   atualizarPagina(page: number) {
     this.page = page;
-    this.getLista(this.page);
+    this.filtroListaPaginada.page = page;
+    this.refresh();
+  }
+
+  onKeyUpFiltro(event: KeyboardEvent) {
+    const filtro = (event.target as HTMLInputElement).value;
+    this.filtroListaPaginada.filtro = filtro;
+    this.filtroSubject.next(filtro);
   }
 
   inserirClick() {

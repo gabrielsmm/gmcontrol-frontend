@@ -23,11 +23,20 @@
       <div class="card p-2">
         <div [ngSwitch]="stateAtual">
           <div *ngSwitchCase="State.StateGrid">
-            <div class="mb-3">
+            <div class="mb-3 d-flex justify-content-between">
               <button class="btn btn-success" (click)="inserirClick()">
                 <i class="fas fa-plus"></i>
                 Inserir
               </button>
+
+              <div class="input-group" style="width: 200px;">
+                <input type="text" name="filtro" class="form-control float-right" placeholder="Pesquisar" (keyup)="onKeyUpFiltro($event)">
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-default" (click)="refresh()">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
             </div>
             <div class="table-responsive p-0">
               <table class="table table-head-fixed table-hover text-nowrap">
