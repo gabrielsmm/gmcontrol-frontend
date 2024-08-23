@@ -3,13 +3,14 @@ import {VARIANT_TYPES} from '@components/info-box/info-box.component';
 import { IconDefinition, FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { OverlayLoadingComponent } from '../overlay-loading/overlay-loading.component';
 import { NgClass, NgIf } from '@angular/common';
+import { RouterLinkWithHref } from '@angular/router';
 
 @Component({
     selector: 'app-small-box',
     templateUrl: './small-box.component.html',
     styleUrls: ['./small-box.component.scss'],
     standalone: true,
-    imports: [NgClass, NgIf, FaIconComponent, OverlayLoadingComponent]
+    imports: [NgClass, NgIf, FaIconComponent, OverlayLoadingComponent, RouterLinkWithHref]
 })
 export class SmallBoxComponent implements OnInit {
     @Input() loading?: 'dark' | boolean;

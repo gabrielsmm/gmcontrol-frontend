@@ -13,6 +13,7 @@ import { UsuariosModulosComponent } from './usuarios-modulos/usuarios-modulos.co
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
+import { RouterLinkWithHref } from '@angular/router';
 
 @Component({
   selector: 'app-usuarios',
@@ -23,7 +24,8 @@ import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs'
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    RouterLinkWithHref
   ]
 })
 export class UsuariosComponent implements OnInit, OnDestroy {

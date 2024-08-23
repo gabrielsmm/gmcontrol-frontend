@@ -80,6 +80,7 @@ export const MENU = [
     {
         name: 'Membresia Cristã',
         iconClasses: 'fas fa-church',
+        path: ['/membresia-crista'],
         module: UsuarioModulo.MEMBRESIA_CRISTA,
         children: [
           {

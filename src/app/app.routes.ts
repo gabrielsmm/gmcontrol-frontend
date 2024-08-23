@@ -1,16 +1,9 @@
 import {Routes} from '@angular/router';
 import {MainComponent} from '@pages/principais/main/main.component';
-import {BlankComponent} from '@pages/comuns/blank/blank.component';
 import {LoginComponent} from '@pages/principais/login/login.component';
-import {ProfileComponent} from '@pages/comuns/profile/profile.component';
-import {RegisterComponent} from '@pages/principais/register/register.component';
-import {DashboardComponent} from '@pages/comuns/dashboard/dashboard.component';
 import {AuthGuard} from '@guards/auth.guard';
 import {NonAuthGuard} from '@guards/non-auth.guard';
 import {ForgotPasswordComponent} from '@pages/principais/forgot-password/forgot-password.component';
-import {RecoverPasswordComponent} from '@pages/principais/recover-password/recover-password.component';
-import {SubMenuComponent} from '@pages/comuns/main-menu/sub-menu/sub-menu.component';
-import { UsuariosComponent } from '@pages/comuns/usuarios/usuarios.component';
 
 export const APP_ROUTES: Routes = [
     {
@@ -21,28 +14,32 @@ export const APP_ROUTES: Routes = [
         children: [
             {
               path: '',
-              component: DashboardComponent
+              loadComponent: () => import('./pages/comuns/dashboard/dashboard.component').then(m => m.DashboardComponent)
             },
             {
                 path: 'profile',
-                component: ProfileComponent
+                loadComponent: () => import('./pages/comuns/profile/profile.component').then(m => m.ProfileComponent)
             },
             {
                 path: 'blank',
-                component: BlankComponent
+                loadComponent: () => import('./pages/comuns/blank/blank.component').then(m => m.BlankComponent)
             },
             {
                 path: 'sub-menu-1',
-                component: SubMenuComponent
+                loadComponent: () => import('./pages/comuns/main-menu/sub-menu/sub-menu.component').then(m => m.SubMenuComponent)
             },
             {
                 path: 'sub-menu-2',
-                component: BlankComponent
+                loadComponent: () => import('./pages/comuns/blank/blank.component').then(m => m.BlankComponent)
             },
             {
               path: 'usuarios',
-              component: UsuariosComponent
+              loadComponent: () => import('./pages/comuns/usuarios/usuarios.component').then(m => m.UsuariosComponent)
             },
+            {
+              path: 'membresia-crista',
+              loadChildren: () => import('./pages/membresia-crista/membresia-crista.routes').then(m => m.MEMBRESIA_CRISTA_ROUTES)
+            }
         ]
     },
     {

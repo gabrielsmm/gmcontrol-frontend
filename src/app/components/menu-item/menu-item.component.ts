@@ -40,7 +40,10 @@ export class MenuItemComponent implements OnInit {
 
     public handleMainMenuAction() {
         if (this.isExpandable) {
-            this.toggleMenu();
+            this.router.navigate(this.menuItem.path);
+            setTimeout(() => {
+              this.toggleMenu();
+            }, 100);
             return;
         }
         this.router.navigate(this.menuItem.path);
