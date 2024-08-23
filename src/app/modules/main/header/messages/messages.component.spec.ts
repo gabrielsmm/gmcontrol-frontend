@@ -8,8 +8,8 @@ describe('MessagesComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [MessagesComponent]
-        }).compileComponents();
+    imports: [MessagesComponent]
+}).compileComponents();
     }));
 
     beforeEach(() => {

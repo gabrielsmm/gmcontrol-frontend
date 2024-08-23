@@ -11,7 +11,8 @@ import {MENU} from '@modules/main/menu-sidebar/menu-sidebar.component';
 @Component({
     selector: 'app-sidebar-search',
     templateUrl: './sidebar-search.component.html',
-    styleUrls: ['./sidebar-search.component.scss']
+    styleUrls: ['./sidebar-search.component.scss'],
+    standalone: true
 })
 export class SidebarSearchComponent {
     public searchText: string = '';

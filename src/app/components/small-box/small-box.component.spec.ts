@@ -8,8 +8,8 @@ describe('SmallBoxComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SmallBoxComponent]
-    })
+    imports: [SmallBoxComponent]
+})
     .compileComponents();
     
     fixture = TestBed.createComponent(SmallBoxComponent);

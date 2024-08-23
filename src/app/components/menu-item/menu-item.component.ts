@@ -1,13 +1,16 @@
 import {Component, HostBinding, Input, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {filter} from 'rxjs/operators';
 import {openCloseAnimation, rotateAnimation} from './menu-item.animations';
+import { NgClass, NgIf, NgFor } from '@angular/common';
 
 @Component({
     selector: 'app-menu-item',
     templateUrl: './menu-item.component.html',
     styleUrls: ['./menu-item.component.scss'],
-    animations: [openCloseAnimation, rotateAnimation]
+    animations: [openCloseAnimation, rotateAnimation],
+    standalone: true,
+    imports: [NgClass, NgIf, NgFor, RouterLink, RouterLinkActive]
 })
 export class MenuItemComponent implements OnInit {
     @Input() menuItem: any = null;

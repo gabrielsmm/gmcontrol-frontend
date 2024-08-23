@@ -8,8 +8,8 @@ describe('ActivityTabComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ActivityTabComponent]
-    })
+    imports: [ActivityTabComponent]
+})
     .compileComponents();
     
     fixture = TestBed.createComponent(ActivityTabComponent);

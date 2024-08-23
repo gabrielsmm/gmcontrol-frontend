@@ -8,8 +8,8 @@ describe('TimelineTabComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TimelineTabComponent]
-    })
+    imports: [TimelineTabComponent]
+})
     .compileComponents();
     
     fixture = TestBed.createComponent(TimelineTabComponent);

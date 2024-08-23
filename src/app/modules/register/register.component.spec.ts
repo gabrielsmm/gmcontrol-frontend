@@ -8,8 +8,8 @@ describe('RegisterComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [RegisterComponent]
-        }).compileComponents();
+    imports: [RegisterComponent]
+}).compileComponents();
     }));
 
     beforeEach(() => {

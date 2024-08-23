@@ -5,14 +5,18 @@ import {
     OnDestroy,
     HostBinding
 } from '@angular/core';
-import {UntypedFormGroup, UntypedFormControl, Validators} from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import {AppService} from '@services/app.service';
 import {ToastrService} from 'ngx-toastr';
+import { ProfabricComponentsModule } from '@profabric/angular-components';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
-    styleUrls: ['./register.component.scss']
+    styleUrls: ['./register.component.scss'],
+    standalone: true,
+    imports: [RouterLink, ReactiveFormsModule, ProfabricComponentsModule]
 })
 export class RegisterComponent implements OnInit, OnDestroy {
     @HostBinding('class') class = 'register-box';

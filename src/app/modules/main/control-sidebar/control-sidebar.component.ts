@@ -15,11 +15,14 @@ import {
 import {Component, HostBinding, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import { ProfabricComponentsModule } from '@profabric/angular-components';
 
 @Component({
     selector: 'app-control-sidebar',
     templateUrl: './control-sidebar.component.html',
-    styleUrls: ['./control-sidebar.component.scss']
+    styleUrls: ['./control-sidebar.component.scss'],
+    standalone: true,
+    imports: [ProfabricComponentsModule]
 })
 export class ControlSidebarComponent implements OnInit {
     @HostBinding('class') classes: string =

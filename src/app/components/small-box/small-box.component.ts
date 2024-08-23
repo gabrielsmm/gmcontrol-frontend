@@ -1,11 +1,15 @@
 import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {VARIANT_TYPES} from '@components/info-box/info-box.component';
-import {IconDefinition} from '@fortawesome/angular-fontawesome';
+import { IconDefinition, FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { OverlayLoadingComponent } from '../overlay-loading/overlay-loading.component';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-small-box',
     templateUrl: './small-box.component.html',
-    styleUrls: ['./small-box.component.scss']
+    styleUrls: ['./small-box.component.scss'],
+    standalone: true,
+    imports: [NgClass, NgIf, FaIconComponent, OverlayLoadingComponent]
 })
 export class SmallBoxComponent implements OnInit {
     @Input() loading?: 'dark' | boolean;

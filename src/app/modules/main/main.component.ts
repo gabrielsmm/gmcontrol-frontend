@@ -12,11 +12,20 @@ import {Store} from '@ngrx/store';
 import { AppService } from '@services/app.service';
 import { ToastrService } from 'ngx-toastr';
 import {Observable} from 'rxjs';
+import { LoadingComponent } from '../../components/loading/loading.component';
+import { ControlSidebarComponent } from './control-sidebar/control-sidebar.component';
+import { FooterComponent } from './footer/footer.component';
+import { RouterOutlet } from '@angular/router';
+import { MenuSidebarComponent } from './menu-sidebar/menu-sidebar.component';
+import { HeaderComponent } from './header/header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-main',
     templateUrl: './main.component.html',
-    styleUrls: ['./main.component.scss']
+    styleUrls: ['./main.component.scss'],
+    standalone: true,
+    imports: [NgIf, HeaderComponent, MenuSidebarComponent, RouterOutlet, FooterComponent, ControlSidebarComponent, LoadingComponent]
 })
 export class MainComponent implements OnInit {
     @HostBinding('class') class = 'wrapper';

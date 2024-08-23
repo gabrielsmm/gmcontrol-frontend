@@ -1,10 +1,14 @@
 import {Component, Input} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-settings-tab',
     templateUrl: './settings-tab.component.html',
-    styleUrls: ['./settings-tab.component.scss']
+    styleUrls: ['./settings-tab.component.scss'],
+    standalone: true,
+    imports: [NgClass, ReactiveFormsModule, RouterLink]
 })
 export class SettingsTabComponent {
     @Input() isActive: boolean = false;

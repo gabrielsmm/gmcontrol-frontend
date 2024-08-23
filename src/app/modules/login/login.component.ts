@@ -5,18 +5,21 @@ import {
     Renderer2,
     HostBinding
 } from '@angular/core';
-import {UntypedFormGroup, UntypedFormControl, Validators} from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {AppService} from '@services/app.service';
 import { AuthService } from '@services/auth.service';
 import { Usuario } from '@/models/usuario.model';
 import { HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { ProfabricComponentsModule } from '@profabric/angular-components';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    styleUrls: ['./login.component.scss'],
+    standalone: true,
+    imports: [RouterLink, ReactiveFormsModule, ProfabricComponentsModule]
 })
 export class LoginComponent implements OnInit, OnDestroy {
     @HostBinding('class') class = 'login-box';

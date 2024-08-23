@@ -5,14 +5,18 @@ import {
     OnInit,
     Renderer2
 } from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {AppService} from '@services/app.service';
+import { ProfabricComponentsModule } from '@profabric/angular-components';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-forgot-password',
     templateUrl: './forgot-password.component.html',
-    styleUrls: ['./forgot-password.component.scss']
+    styleUrls: ['./forgot-password.component.scss'],
+    standalone: true,
+    imports: [RouterLink, ReactiveFormsModule, ProfabricComponentsModule]
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {
     @HostBinding('class') class = 'login-box';

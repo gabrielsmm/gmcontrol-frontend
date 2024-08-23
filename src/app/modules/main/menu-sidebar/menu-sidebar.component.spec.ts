@@ -7,8 +7,8 @@ describe('MenuSidbarComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [MenuSidebarComponent]
-        }).compileComponents();
+    imports: [MenuSidebarComponent]
+}).compileComponents();
     }));
 
     beforeEach(() => {

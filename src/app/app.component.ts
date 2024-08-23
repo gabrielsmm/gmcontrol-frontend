@@ -1,12 +1,14 @@
 import {Component} from '@angular/core';
-import {Router, Event, NavigationEnd} from '@angular/router';
+import { Router, Event, NavigationEnd, RouterOutlet } from '@angular/router';
 import {environment} from 'environments/environment';
 import {GoogleAnalyticsService} from 'ngx-google-analytics';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [RouterOutlet]
 })
 export class AppComponent {
     constructor(

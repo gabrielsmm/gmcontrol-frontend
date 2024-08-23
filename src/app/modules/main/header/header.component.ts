@@ -2,16 +2,21 @@ import {AppState} from '@/store/state';
 import {ToggleControlSidebar, ToggleSidebarMenu} from '@/store/ui/actions';
 import {UiState} from '@/store/ui/state';
 import {Component, HostBinding, OnInit} from '@angular/core';
-import {UntypedFormGroup, UntypedFormControl} from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, ReactiveFormsModule } from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppService} from '@services/app.service';
 import {Observable} from 'rxjs';
+import { UserComponent } from './user/user.component';
+import { NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 const BASE_CLASSES = 'main-header navbar navbar-expand';
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss']
+    styleUrls: ['./header.component.scss'],
+    standalone: true,
+    imports: [RouterLink, NgIf, ReactiveFormsModule, UserComponent]
 })
 export class HeaderComponent implements OnInit {
     @HostBinding('class') classes: string = BASE_CLASSES;

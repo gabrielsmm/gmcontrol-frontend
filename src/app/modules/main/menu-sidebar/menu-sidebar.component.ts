@@ -7,12 +7,19 @@ import {Component, HostBinding, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppService} from '@services/app.service';
 import {Observable} from 'rxjs';
+import { MenuItemComponent } from '../../../components/menu-item/menu-item.component';
+import { NgFor } from '@angular/common';
+import { SidebarSearchComponent } from '../../../components/sidebar-search/sidebar-search.component';
+import { ProfabricComponentsModule } from '@profabric/angular-components';
+import { RouterLink } from '@angular/router';
 
 const BASE_CLASSES = 'main-sidebar elevation-4';
 @Component({
     selector: 'app-menu-sidebar',
     templateUrl: './menu-sidebar.component.html',
-    styleUrls: ['./menu-sidebar.component.scss']
+    styleUrls: ['./menu-sidebar.component.scss'],
+    standalone: true,
+    imports: [RouterLink, ProfabricComponentsModule, SidebarSearchComponent, NgFor, MenuItemComponent]
 })
 export class MenuSidebarComponent implements OnInit {
     @HostBinding('class') classes: string = BASE_CLASSES;
