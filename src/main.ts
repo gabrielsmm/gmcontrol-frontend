@@ -11,7 +11,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToastrModule } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from '@/app-routing.module';
 import { uiReducer } from './app/store/ui/reducer';
 import { authReducer } from './app/store/auth/reducer';
 import { StoreModule } from '@ngrx/store';
@@ -21,18 +20,21 @@ import { ProfabricComponentsModule } from '@profabric/angular-components';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { TokenInterceptorService } from '@services/token-interceptor.service';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
+import { APP_ROUTES } from '@/app.routes';
 
-// if (environment.NODE_ENV === 'production') {
-//     enableProdMode();
-// }
+if (environment.NODE_ENV === 'production') {
+    enableProdMode();
+}
 
 bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(ProfabricComponentsModule, CommonModule, BrowserModule, StoreModule.forRoot({ auth: authReducer, ui: uiReducer }), AppRoutingModule, ReactiveFormsModule, ToastrModule.forRoot({
+        provideRouter(APP_ROUTES, withPreloading(PreloadAllModules)),
+        importProvidersFrom(ProfabricComponentsModule, CommonModule, BrowserModule, StoreModule.forRoot({ auth: authReducer, ui: uiReducer }), ReactiveFormsModule, ToastrModule.forRoot({
             timeOut: 3000,
             positionClass: 'toast-top-right',
             preventDuplicates: true
-        }), 
+        }),
         // NgxGoogleAnalyticsModule.forRoot(environment.GA_ID),
         FontAwesomeModule, NgbModule),
         provideHttpClient(withInterceptorsFromDi()),
@@ -41,4 +43,4 @@ bootstrapApplication(AppComponent, {
         provideAnimations()
     ]
 })
-    .catch((err) => console.error(err));
+.catch((err) => console.error(err));

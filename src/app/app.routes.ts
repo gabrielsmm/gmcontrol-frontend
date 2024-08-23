@@ -1,5 +1,4 @@
-import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import {Routes} from '@angular/router';
 import {MainComponent} from '@modules/main/main.component';
 import {BlankComponent} from '@pages/blank/blank.component';
 import {LoginComponent} from '@modules/login/login.component';
@@ -13,7 +12,7 @@ import {RecoverPasswordComponent} from '@modules/recover-password/recover-passwo
 import {SubMenuComponent} from '@pages/main-menu/sub-menu/sub-menu.component';
 import { UsuariosComponent } from '@pages/usuarios/usuarios.component';
 
-const routes: Routes = [
+export const APP_ROUTES: Routes = [
     {
         path: '',
         component: MainComponent,
@@ -68,9 +67,3 @@ const routes: Routes = [
     // },
     {path: '**', redirectTo: ''}
 ];
-
-@NgModule({
-    imports: [RouterModule.forRoot(routes, {})],
-    exports: [RouterModule]
-})
-export class AppRoutingModule {}
