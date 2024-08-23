@@ -9,8 +9,8 @@ import {
     faChartPie,
     faChurch
 } from '@fortawesome/free-solid-svg-icons';
-import { SmallBoxComponent } from '../../components/small-box/small-box.component';
-import { ContentHeaderComponent } from '../../components/content-header/content-header.component';
+import { SmallBoxComponent } from '../../../components/small-box/small-box.component';
+import { ContentHeaderComponent } from '../../../components/content-header/content-header.component';
 
 @Component({
     selector: 'app-dashboard',

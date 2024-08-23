@@ -1,16 +1,16 @@
 import {Routes} from '@angular/router';
-import {MainComponent} from '@modules/main/main.component';
-import {BlankComponent} from '@pages/blank/blank.component';
-import {LoginComponent} from '@modules/login/login.component';
-import {ProfileComponent} from '@pages/profile/profile.component';
-import {RegisterComponent} from '@modules/register/register.component';
-import {DashboardComponent} from '@pages/dashboard/dashboard.component';
+import {MainComponent} from '@pages/principais/main/main.component';
+import {BlankComponent} from '@pages/comuns/blank/blank.component';
+import {LoginComponent} from '@pages/principais/login/login.component';
+import {ProfileComponent} from '@pages/comuns/profile/profile.component';
+import {RegisterComponent} from '@pages/principais/register/register.component';
+import {DashboardComponent} from '@pages/comuns/dashboard/dashboard.component';
 import {AuthGuard} from '@guards/auth.guard';
 import {NonAuthGuard} from '@guards/non-auth.guard';
-import {ForgotPasswordComponent} from '@modules/forgot-password/forgot-password.component';
-import {RecoverPasswordComponent} from '@modules/recover-password/recover-password.component';
-import {SubMenuComponent} from '@pages/main-menu/sub-menu/sub-menu.component';
-import { UsuariosComponent } from '@pages/usuarios/usuarios.component';
+import {ForgotPasswordComponent} from '@pages/principais/forgot-password/forgot-password.component';
+import {RecoverPasswordComponent} from '@pages/principais/recover-password/recover-password.component';
+import {SubMenuComponent} from '@pages/comuns/main-menu/sub-menu/sub-menu.component';
+import { UsuariosComponent } from '@pages/comuns/usuarios/usuarios.component';
 
 export const APP_ROUTES: Routes = [
     {

@@ -5,7 +5,7 @@ import {
     SimpleChanges,
     ViewChild
 } from '@angular/core';
-import {MENU} from '@modules/main/menu-sidebar/menu-sidebar.component';
+import {MENU} from '@pages/principais/main/menu-sidebar/menu-sidebar.component';
 // import {PfDropdown} from '@profabric/angular-components';
 
 @Component({

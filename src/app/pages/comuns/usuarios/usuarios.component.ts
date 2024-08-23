@@ -1,4 +1,4 @@
-import { OperacaoCadastro } from './../../models/enums/operacao-cadastro.enum';
+import { OperacaoCadastro } from '../../../models/enums/operacao-cadastro.enum';
 import { State } from '@/models/enums/state.enum';
 import { Usuario } from '@/models/usuario.model';
 import { CommonModule } from '@angular/common';

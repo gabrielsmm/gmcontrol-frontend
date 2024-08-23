@@ -7,9 +7,9 @@ import {Component, HostBinding, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppService} from '@services/app.service';
 import {Observable} from 'rxjs';
-import { MenuItemComponent } from '../../../components/menu-item/menu-item.component';
+import { MenuItemComponent } from '../../../../components/menu-item/menu-item.component';
 import { NgFor } from '@angular/common';
-import { SidebarSearchComponent } from '../../../components/sidebar-search/sidebar-search.component';
+import { SidebarSearchComponent } from '../../../../components/sidebar-search/sidebar-search.component';
 import { ProfabricComponentsModule } from '@profabric/angular-components';
 import { RouterLink } from '@angular/router';
 

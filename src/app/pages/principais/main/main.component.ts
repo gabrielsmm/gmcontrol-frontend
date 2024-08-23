@@ -12,7 +12,7 @@ import {Store} from '@ngrx/store';
 import { AppService } from '@services/app.service';
 import { ToastrService } from 'ngx-toastr';
 import {Observable} from 'rxjs';
-import { LoadingComponent } from '../../components/loading/loading.component';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 import { ControlSidebarComponent } from './control-sidebar/control-sidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { RouterOutlet } from '@angular/router';
