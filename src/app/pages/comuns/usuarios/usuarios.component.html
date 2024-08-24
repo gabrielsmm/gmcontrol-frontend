@@ -1,7 +1,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <div class="container-fluid">
-    <div class="row mb-2">
+    <div class="row">
       <div class="col-sm-6">
         <h1>Usuários</h1>
       </div>
@@ -26,16 +26,28 @@
           @case (State.StateGrid) {
             <div>
               <div class="mb-3 d-flex justify-content-between">
-                <button class="btn btn-success" (click)="inserirClick()">
-                  <i class="fas fa-plus"></i>
-                  Inserir
-                </button>
-                <div class="input-group" style="width: 200px;">
-                  <input type="text" name="filtro" class="form-control float-right" placeholder="Pesquisar" (keyup)="onKeyUpFiltro($event)">
-                  <div class="input-group-append">
-                    <button type="submit" class="btn btn-default" (click)="refresh()">
-                      <i class="fas fa-search"></i>
-                    </button>
+                <div>
+                  <button class="btn btn-success" (click)="inserirClick()">
+                    <i class="fas fa-plus"></i>
+                    Inserir
+                  </button>
+                </div>
+                <div class="d-flex align-items-end">
+                  <div class="form-group mr-2 mb-0">
+                    <label for="qtdRegistros" style="font-size: 10px; margin-bottom: 0;">Quantidade de registros</label>
+                    <select class="form-control" aria-label="Selecionar quantidade de registros" id="qtdRegistros" [(ngModel)]="filtroListaPaginada.linesPerPage" (change)="onQtdRegistrosChange($event)">
+                      @for (qtd of listaQuantidadeRegistros; track qtd) {
+                        <option [value]="qtd">{{qtd}}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="input-group" style="width: 200px;">
+                    <input type="text" name="filtro" class="form-control float-right" placeholder="Pesquisar" (keyup)="onKeyUpFiltro($event)">
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -52,7 +64,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @for (usuario of usuarios; track usuario) {
+                    @for (usuario of usuarios; track usuario.id) {
                       <tr>
                         <td>
                           <button (click)="alterarClick(usuario)"
@@ -81,20 +93,25 @@
                   </tbody>
                 </table>
               </div>
-              <div class="row d-flex justify-content-center">
-                <nav>
-                  <ul class="pagination">
-                    <li class="page-item" [ngClass]="{'disabled': first}">
-                      <button class="page-link" (click)="atualizarPagina(page - 1)">Anterior</button>
-                    </li>
-                    <li class="page-item disabled">
-                      <span class="page-link">{{page + 1}}</span>
-                    </li>
-                    <li class="page-item" [ngClass]="{'disabled': last}">
-                      <button class="page-link" (click)="atualizarPagina(page + 1)">Próxima</button>
-                    </li>
-                  </ul>
-                </nav>
+              <div class="row d-flex justify-content-between align-items-center">
+                <div class="ml-2" style="font-size: 14px;">
+                  <p>Exibindo {{numberOfElements}} de {{totalElements}} registros</p>
+                </div>
+                <div class="mr-2">
+                  <nav>
+                    <ul class="pagination">
+                      <li class="page-item" [ngClass]="{'disabled': first}">
+                        <button class="page-link" (click)="atualizarPagina(filtroListaPaginada.page - 1)">Anterior</button>
+                      </li>
+                      <li class="page-item disabled">
+                        <span class="page-link">{{filtroListaPaginada.page + 1}}</span>
+                      </li>
+                      <li class="page-item" [ngClass]="{'disabled': last}">
+                        <button class="page-link" (click)="atualizarPagina(filtroListaPaginada.page + 1)">Próxima</button>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
               </div>
             </div>
           }

@@ -35,6 +35,19 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   public operacaoCadastro: OperacaoCadastro = null;
   public usuarios: Usuario[] = [];
 
+  // paginação
+  // public page: number = 0;
+  // public size: number = 10;
+  public first: boolean;
+  public last: boolean;
+  public numberOfElements: number = 0;
+  public totalElements: number = 0;
+
+  // filtro
+  public filtroListaPaginada: FiltroListaPaginada = new FiltroListaPaginada();
+  private filtroSubject = new Subject<string>();
+  private filtroSubscription = new Subscription();
+
   public dadosForm: UntypedFormGroup = new UntypedFormGroup({
     id: new UntypedFormControl(null, Validators.required),
     nome: new UntypedFormControl(null, Validators.required),
@@ -49,21 +62,12 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     ])
   });
 
-  // paginação
-  public page = 0;
-  public size = 10;
-  public first: boolean;
-  public last: boolean;
-  public totalElements = 0;
-
-  public filtroListaPaginada: FiltroListaPaginada = new FiltroListaPaginada();
-  private filtroSubject = new Subject<string>();
-  private filtroSubscription = new Subscription();
-
   public listaStatus = [
     { id: 1, descricao: 'Ativo' },
     { id: 2, descricao: 'Inativo' }
   ];
+
+  public listaQuantidadeRegistros = [10, 30, 50, 70, 90, 120];
 
   private modalService = inject(NgbModal);
 
@@ -95,6 +99,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
         this.usuarios = data.content;
         this.first = data.first;
         this.last = data.last;
+        this.numberOfElements = data.numberOfElements;
         this.totalElements = data.totalElements;
       },
       error: (err) => {
@@ -108,7 +113,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
 
   atualizarPagina(page: number) {
-    this.page = page;
     this.filtroListaPaginada.page = page;
     this.refresh();
   }
@@ -117,6 +121,12 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     const filtro = (event.target as HTMLInputElement).value;
     this.filtroListaPaginada.filtro = filtro;
     this.filtroSubject.next(filtro);
+  }
+
+  onQtdRegistrosChange(event: Event): void {
+    const qtdRegistros = Number((event.target as HTMLSelectElement).value);
+    this.filtroListaPaginada.linesPerPage = qtdRegistros;
+    this.refresh();
   }
 
   inserirClick() {
