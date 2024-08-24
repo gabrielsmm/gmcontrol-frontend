@@ -69,6 +69,13 @@ export class UsuariosComponent implements OnInit, OnDestroy {
 
   public listaQuantidadeRegistros = [10, 30, 50, 70, 90, 120];
 
+  public listaOrdemRegistros = [
+    { campo: 'id', direcao: 'ASC', descricao: 'ID Crescente' },
+    { campo: 'id', direcao: 'DESC', descricao: 'ID Decrescente' },
+    { campo: 'nome', direcao: 'ASC', descricao: 'Nome Crescente' },
+    { campo: 'nome', direcao: 'DESC', descricao: 'Nome Decrescente' }
+  ];
+
   private modalService = inject(NgbModal);
 
   constructor(private usuarioService: UsuarioService,
@@ -94,7 +101,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
 
   private getLista() {
-    this.usuarioService.findPage(this.filtroListaPaginada).subscribe({
+    this.usuarioService.getListaPaginada(this.filtroListaPaginada).subscribe({
       next: (data) => {
         this.usuarios = data.content;
         this.first = data.first;
@@ -113,7 +120,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
 
   atualizarPagina(page: number) {
-    this.filtroListaPaginada.page = page;
+    this.filtroListaPaginada.pagina = page;
     this.refresh();
   }
 
@@ -125,8 +132,24 @@ export class UsuariosComponent implements OnInit, OnDestroy {
 
   onQtdRegistrosChange(event: Event): void {
     const qtdRegistros = Number((event.target as HTMLSelectElement).value);
-    this.filtroListaPaginada.linesPerPage = qtdRegistros;
+    this.filtroListaPaginada.registrosPorPagina = qtdRegistros;
     this.refresh();
+  }
+
+  onOrdemRegistrosChange(event: Event): void {
+    const selectedIndex = Number((event.target as HTMLSelectElement).value);
+    const obj = this.listaOrdemRegistros[selectedIndex];
+    this.filtroListaPaginada.ordem = obj.campo;
+    this.filtroListaPaginada.direcao = obj.direcao;
+    this.refresh();
+  }
+
+  get ordemSelecionada(): number {
+    return this.listaOrdemRegistros.findIndex(
+      (ordem) =>
+        ordem.campo === this.filtroListaPaginada.ordem &&
+        ordem.direcao === this.filtroListaPaginada.direcao
+    );
   }
 
   inserirClick() {

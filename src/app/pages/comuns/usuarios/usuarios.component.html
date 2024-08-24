@@ -25,7 +25,7 @@
         @switch (stateAtual) {
           @case (State.StateGrid) {
             <div>
-              <div class="mb-3 d-flex justify-content-between">
+              <div class="mb-3 d-flex justify-content-between align-items-center">
                 <div>
                   <button class="btn btn-success" (click)="inserirClick()">
                     <i class="fas fa-plus"></i>
@@ -34,8 +34,16 @@
                 </div>
                 <div class="d-flex align-items-end">
                   <div class="form-group mr-2 mb-0">
+                    <label for="ordem" style="font-size: 10px; margin-bottom: 0;">Ordem</label>
+                    <select class="form-control" aria-label="Selecionar ordem" id="ordem" (change)="onOrdemRegistrosChange($event)">
+                      @for (ordem of listaOrdemRegistros; track ordem; let i = $index) {
+                        <option [value]="i" [selected]="i === ordemSelecionada">{{ordem.descricao}}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="form-group mr-2 mb-0">
                     <label for="qtdRegistros" style="font-size: 10px; margin-bottom: 0;">Quantidade de registros</label>
-                    <select class="form-control" aria-label="Selecionar quantidade de registros" id="qtdRegistros" [(ngModel)]="filtroListaPaginada.linesPerPage" (change)="onQtdRegistrosChange($event)">
+                    <select class="form-control" aria-label="Selecionar quantidade de registros" id="qtdRegistros" [(ngModel)]="filtroListaPaginada.registrosPorPagina" (change)="onQtdRegistrosChange($event)">
                       @for (qtd of listaQuantidadeRegistros; track qtd) {
                         <option [value]="qtd">{{qtd}}</option>
                       }
@@ -101,13 +109,13 @@
                   <nav>
                     <ul class="pagination">
                       <li class="page-item" [ngClass]="{'disabled': first}">
-                        <button class="page-link" (click)="atualizarPagina(filtroListaPaginada.page - 1)">Anterior</button>
+                        <button class="page-link" (click)="atualizarPagina(filtroListaPaginada.pagina - 1)">Anterior</button>
                       </li>
                       <li class="page-item disabled">
-                        <span class="page-link">{{filtroListaPaginada.page + 1}}</span>
+                        <span class="page-link">{{filtroListaPaginada.pagina + 1}}</span>
                       </li>
                       <li class="page-item" [ngClass]="{'disabled': last}">
-                        <button class="page-link" (click)="atualizarPagina(filtroListaPaginada.page + 1)">Próxima</button>
+                        <button class="page-link" (click)="atualizarPagina(filtroListaPaginada.pagina + 1)">Próxima</button>
                       </li>
                     </ul>
                   </nav>

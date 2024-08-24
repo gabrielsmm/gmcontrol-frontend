@@ -28,8 +28,8 @@ export class UsuarioService {
     return this.http.get<Usuario>(url);
   }
 
-  findPage(filtro: FiltroListaPaginada): Observable<any>{
-    let url = `${this.getApiUrl()}/page`;
+  getListaPaginada(filtro: FiltroListaPaginada): Observable<any>{
+    let url = `${this.getApiUrl()}/lista-paginada`;
     let params = new HttpParams();
 
     Object.keys(filtro).forEach(key => {
