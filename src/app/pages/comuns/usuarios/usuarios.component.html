@@ -1,17 +1,17 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <div class="container-fluid">
-      <div class="row mb-2">
-          <div class="col-sm-6">
-              <h1>Usuários</h1>
-          </div>
-          <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item"><a [routerLink]="'/main'">Início</a></li>
-                  <li class="breadcrumb-item active">Usuários</li>
-              </ol>
-          </div>
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Usuários</h1>
       </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a [routerLink]="'/main'">Início</a></li>
+          <li class="breadcrumb-item active">Usuários</li>
+        </ol>
+      </div>
+    </div>
   </div>
   <!-- /.container-fluid -->
 </section>
@@ -20,67 +20,70 @@
 <section class="content">
   <!-- Default box -->
   <div class="container-fluid">
-      <div class="card p-2">
-        <div [ngSwitch]="stateAtual">
-          <div *ngSwitchCase="State.StateGrid">
-            <div class="mb-3 d-flex justify-content-between">
-              <button class="btn btn-success" (click)="inserirClick()">
-                <i class="fas fa-plus"></i>
-                Inserir
-              </button>
-
-              <div class="input-group" style="width: 200px;">
-                <input type="text" name="filtro" class="form-control float-right" placeholder="Pesquisar" (keyup)="onKeyUpFiltro($event)">
-                <div class="input-group-append">
-                  <button type="submit" class="btn btn-default" (click)="refresh()">
-                    <i class="fas fa-search"></i>
-                  </button>
+    <div class="card p-2">
+      <div>
+        @switch (stateAtual) {
+          @case (State.StateGrid) {
+            <div>
+              <div class="mb-3 d-flex justify-content-between">
+                <button class="btn btn-success" (click)="inserirClick()">
+                  <i class="fas fa-plus"></i>
+                  Inserir
+                </button>
+                <div class="input-group" style="width: 200px;">
+                  <input type="text" name="filtro" class="form-control float-right" placeholder="Pesquisar" (keyup)="onKeyUpFiltro($event)">
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default" (click)="refresh()">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="table-responsive p-0">
-              <table class="table table-head-fixed table-hover text-nowrap">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Usuário (login)</th>
-                    <th>E-mail</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let usuario of usuarios">
-                    <td>
-                      <button (click)="alterarClick(usuario)"
-                              class="btn btn-sm btn-warning"
-                              matTooltip="Alterar">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button (click)="eliminarClick(usuario)"
-                              class="btn btn-sm btn-danger ml-1"
-                              matTooltip="Excluir">
-                        <i class="fas fa-trash-alt"></i>
-                      </button>
-                      <button (click)="openModulos(usuario)"
-                              class="btn btn-sm btn-primary ml-1"
-                              matTooltip="Módulos">
-                        <i class="fas fa-boxes"></i>
-                      </button>
-                    </td>
-                    <td>{{ usuario.id }}</td>
-                    <td>{{ usuario.nome }}</td>
-                    <td>{{ usuario.nomeUsuario }}</td>
-                    <td>{{ usuario.email }}</td>
-                    <td>{{ displayStatus(usuario.status) }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="row d-flex justify-content-center">
-              <nav>
-                <ul class="pagination">
+              <div class="table-responsive p-0">
+                <table class="table table-head-fixed table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>ID</th>
+                      <th>Nome</th>
+                      <th>Usuário (login)</th>
+                      <th>E-mail</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (usuario of usuarios; track usuario) {
+                      <tr>
+                        <td>
+                          <button (click)="alterarClick(usuario)"
+                            class="btn btn-sm btn-warning"
+                            matTooltip="Alterar">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button (click)="eliminarClick(usuario)"
+                            class="btn btn-sm btn-danger ml-1"
+                            matTooltip="Excluir">
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                          <button (click)="openModulos(usuario)"
+                            class="btn btn-sm btn-primary ml-1"
+                            matTooltip="Módulos">
+                            <i class="fas fa-boxes"></i>
+                          </button>
+                        </td>
+                        <td>{{ usuario.id }}</td>
+                        <td>{{ usuario.nome }}</td>
+                        <td>{{ usuario.nomeUsuario }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ displayStatus(usuario.status) }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              <div class="row d-flex justify-content-center">
+                <nav>
+                  <ul class="pagination">
                     <li class="page-item" [ngClass]="{'disabled': first}">
                       <button class="page-link" (click)="atualizarPagina(page - 1)">Anterior</button>
                     </li>
@@ -90,112 +93,118 @@
                     <li class="page-item" [ngClass]="{'disabled': last}">
                       <button class="page-link" (click)="atualizarPagina(page + 1)">Próxima</button>
                     </li>
-                </ul>
-              </nav>
+                  </ul>
+                </nav>
+              </div>
             </div>
-          </div>
-          <div *ngSwitchCase="State.StateDados">
-            <div class="mb-3">
-              <button class="btn btn-primary mr-2" (click)="salvarClick()">
-                <i class="fas fa-save"></i>
-                Salvar
-              </button>
-              <button class="btn btn-danger" (click)="cancelarClick()">
-                <i class="fas fa-window-close"></i>
-                Cancelar
-              </button>
+          }
+          @case (State.StateDados) {
+            <div>
+              <div class="mb-3">
+                <button class="btn btn-primary mr-2" (click)="salvarClick()">
+                  <i class="fas fa-save"></i>
+                  Salvar
+                </button>
+                <button class="btn btn-danger" (click)="cancelarClick()">
+                  <i class="fas fa-window-close"></i>
+                  Cancelar
+                </button>
+              </div>
+              <form [formGroup]="dadosForm">
+                @if (ehAlterar()) {
+                  <div class="row mb-2">
+                    <div class="col-md-2">
+                      <label for="id">ID</label>
+                      <input formControlName="id" id="id" type="number" class="form-control" placeholder="ID" [readonly]="true"/>
+                    </div>
+                  </div>
+                }
+                <div class="row mb-2">
+                  <div class="col-md-6">
+                    <label for="nome">Nome</label>
+                    <input formControlName="nome" id="nome" type="text" class="form-control" placeholder="Nome"/>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="email">E-mail</label>
+                    <input formControlName="email" id="email" type="email" class="form-control" placeholder="E-mail"/>
+                  </div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-md-4">
+                    <label for="nomeUsuario">Nome de usuário</label>
+                    <input formControlName="nomeUsuario" id="nomeUsuario" type="text" class="form-control" placeholder="Nome de usuário"/>
+                  </div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-md-4">
+                    <label for="senha">Senha @if (ehAlterar()) {
+                      <span>(Informe apenas se desejar alterar)</span>
+                    }</label>
+                    <input formControlName="senha" id="senha" type="password" class="form-control" placeholder="Senha"/>
+                  </div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="status">Status</label>
+                      <select formControlName="status" class="form-control" id="status">
+                        <option value="1">Ativo</option>
+                        <option value="2">Inativo</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-md-12" formArrayName="perfis">
+                    <label class="d-block">Perfis</label>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" formControlName="0" value="1" (change)="onCheckboxChange($event, 0)">
+                      <label class="form-check-label" for="master">Master</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" formControlName="1" value="2" (change)="onCheckboxChange($event, 1)">
+                      <label class="form-check-label" for="admin">Administrador</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" formControlName="2" value="3" (change)="onCheckboxChange($event, 2)">
+                      <label class="form-check-label" for="usuario">Usuário</label>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
-            <form [formGroup]="dadosForm">
-              <div class="row mb-2" *ngIf="ehAlterar()">
-                <div class="col-md-2">
-                  <label for="id">ID</label>
-                  <input formControlName="id" id="id" type="number" class="form-control" placeholder="ID" [readonly]="true"/>
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-md-6">
-                  <label for="nome">Nome</label>
-                  <input formControlName="nome" id="nome" type="text" class="form-control" placeholder="Nome"/>
-                </div>
-                <div class="col-md-6">
-                  <label for="email">E-mail</label>
-                  <input formControlName="email" id="email" type="email" class="form-control" placeholder="E-mail"/>
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-md-4">
-                  <label for="nomeUsuario">Nome de usuário</label>
-                  <input formControlName="nomeUsuario" id="nomeUsuario" type="text" class="form-control" placeholder="Nome de usuário"/>
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-md-4">
-                  <label for="senha">Senha <span *ngIf="ehAlterar()">(Informe apenas se desejar alterar)</span></label>
-                  <input formControlName="senha" id="senha" type="password" class="form-control" placeholder="Senha"/>
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label for="status">Status</label>
-                    <select formControlName="status" class="form-control" id="status">
-                      <option value="1">Ativo</option>
-                      <option value="2">Inativo</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-md-12" formArrayName="perfis">
-                  <label class="d-block">Perfis</label>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" formControlName="0" value="1" (change)="onCheckboxChange($event, 0)">
-                    <label class="form-check-label" for="master">Master</label>
-                  </div>
-
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" formControlName="1" value="2" (change)="onCheckboxChange($event, 1)">
-                    <label class="form-check-label" for="admin">Administrador</label>
-                  </div>
-
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" formControlName="2" value="3" (change)="onCheckboxChange($event, 2)">
-                    <label class="form-check-label" for="usuario">Usuário</label>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-          <!-- <div class="card-header">
-              <h3 class="card-title">Title</h3>
-
-              <div class="card-tools">
-                  <button
-                      type="button"
-                      class="btn btn-tool"
-                      data-widget="collapse"
-                      data-toggle="tooltip"
-                      title="Collapse"
-                  >
-                      <i class="fa fa-minus"></i>
-                  </button>
-                  <button
-                      type="button"
-                      class="btn btn-tool"
-                      data-widget="remove"
-                      data-toggle="tooltip"
-                      title="Remove"
-                  >
-                      <i class="fa fa-times"></i>
-                  </button>
-              </div>
-          </div> -->
-          <!-- /.card-body -->
-          <!-- <div class="card-footer">Footer</div> -->
-          <!-- /.card-footer-->
+          }
+        }
       </div>
+      <!-- <div class="card-header">
+      <h3 class="card-title">Title</h3>
+
+      <div class="card-tools">
+        <button
+          type="button"
+          class="btn btn-tool"
+          data-widget="collapse"
+          data-toggle="tooltip"
+          title="Collapse"
+          >
+          <i class="fa fa-minus"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-tool"
+          data-widget="remove"
+          data-toggle="tooltip"
+          title="Remove"
+          >
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div> -->
+    <!-- /.card-body -->
+    <!-- <div class="card-footer">Footer</div> -->
+    <!-- /.card-footer-->
   </div>
-  <!-- /.card -->
+</div>
+<!-- /.card -->
 </section>
 <!-- /.content -->

@@ -1,6 +1,6 @@
 import { UsuarioModuloAcesso } from '@/models/usuario-modulo-acesso.model';
 import { Usuario } from '@/models/usuario.model';
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AppService } from '@services/app.service';
@@ -10,9 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-usuarios-modulos',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [],
   templateUrl: './usuarios-modulos.component.html',
   styleUrl: './usuarios-modulos.component.scss'
 })

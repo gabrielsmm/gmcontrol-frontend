@@ -2,7 +2,7 @@ import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {VARIANT_TYPES} from '@components/info-box/info-box.component';
 import { IconDefinition, FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { OverlayLoadingComponent } from '../overlay-loading/overlay-loading.component';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { RouterLinkWithHref } from '@angular/router';
 
 @Component({
@@ -10,7 +10,7 @@ import { RouterLinkWithHref } from '@angular/router';
     templateUrl: './small-box.component.html',
     styleUrls: ['./small-box.component.scss'],
     standalone: true,
-    imports: [NgClass, NgIf, FaIconComponent, OverlayLoadingComponent, RouterLinkWithHref]
+    imports: [NgClass, FaIconComponent, OverlayLoadingComponent, RouterLinkWithHref]
 })
 export class SmallBoxComponent implements OnInit {
     @Input() loading?: 'dark' | boolean;

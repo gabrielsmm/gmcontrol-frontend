@@ -2,7 +2,7 @@ import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {filter} from 'rxjs/operators';
 import {openCloseAnimation, rotateAnimation} from './menu-item.animations';
-import { NgClass, NgIf, NgFor } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-menu-item',
@@ -10,7 +10,7 @@ import { NgClass, NgIf, NgFor } from '@angular/common';
     styleUrls: ['./menu-item.component.scss'],
     animations: [openCloseAnimation, rotateAnimation],
     standalone: true,
-    imports: [NgClass, NgIf, NgFor, RouterLink, RouterLinkActive]
+    imports: [NgClass, RouterLink, RouterLinkActive]
 })
 export class MenuItemComponent implements OnInit {
     @Input() menuItem: any = null;

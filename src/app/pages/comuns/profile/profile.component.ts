@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import { SettingsTabComponent } from './settings-tab/settings-tab.component';
 import { TimelineTabComponent } from './timeline-tab/timeline-tab.component';
 import { ActivityTabComponent } from './activity-tab/activity-tab.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ProfabricComponentsModule } from '@profabric/angular-components';
 
 @Component({
@@ -12,7 +12,7 @@ import { ProfabricComponentsModule } from '@profabric/angular-components';
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.scss'],
     standalone: true,
-    imports: [ProfabricComponentsModule, NgIf, ActivityTabComponent, TimelineTabComponent, SettingsTabComponent, AsyncPipe]
+    imports: [ProfabricComponentsModule, ActivityTabComponent, TimelineTabComponent, SettingsTabComponent, AsyncPipe]
 })
 export class ProfileComponent {
     public activeTabSubject = new BehaviorSubject<string>('ACTIVITY');

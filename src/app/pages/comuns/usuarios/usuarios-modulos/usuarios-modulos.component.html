@@ -13,13 +13,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let modulo of usuariosModulos">
-          <td class="text-center">{{ modulo.codigo }}</td>
-          <td>{{ modulo.descricao }}</td>
-          <td class="text-center">
-            <input type="checkbox" [checked]="modulo.possuiAcesso" (change)="onCheckBoxAcessoChange($event, modulo)">
-          </td>
-        </tr>
+        @for (modulo of usuariosModulos; track modulo) {
+          <tr>
+            <td class="text-center">{{ modulo.codigo }}</td>
+            <td>{{ modulo.descricao }}</td>
+            <td class="text-center">
+              <input type="checkbox" [checked]="modulo.possuiAcesso" (change)="onCheckBoxAcessoChange($event, modulo)">
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>

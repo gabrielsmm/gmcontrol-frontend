@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import { NgFor } from '@angular/common';
+
 import { ProfabricComponentsModule } from '@profabric/angular-components';
 
 @Component({
@@ -7,7 +7,7 @@ import { ProfabricComponentsModule } from '@profabric/angular-components';
     templateUrl: './messages.component.html',
     styleUrls: ['./messages.component.scss'],
     standalone: true,
-    imports: [ProfabricComponentsModule, NgFor]
+    imports: [ProfabricComponentsModule]
 })
 export class MessagesComponent {
     public messages = [
