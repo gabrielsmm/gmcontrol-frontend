@@ -10,7 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalConfirmacaoComponent } from '@components/modal-confirmacao/modal-confirmacao.component';
 import { AppService } from '@services/app.service';
 import { UsuariosModulosComponent } from './usuarios-modulos/usuarios-modulos.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 import { RouterLinkWithHref } from '@angular/router';
@@ -25,7 +25,8 @@ import { RouterLinkWithHref } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     MatTooltipModule,
-    RouterLinkWithHref
+    RouterLinkWithHref,
+    NgbModule
   ]
 })
 export class UsuariosComponent implements OnInit, OnDestroy {
@@ -36,12 +37,11 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   public usuarios: Usuario[] = [];
 
   // paginação
-  // public page: number = 0;
-  // public size: number = 10;
-  public first: boolean;
-  public last: boolean;
-  public numberOfElements: number = 0;
-  public totalElements: number = 0;
+  public pagina: number = 1;
+  public primeiraPagina: boolean;
+  public ultimaPagina: boolean;
+  public numeroDeRegistros: number = 0;
+  public totalRegistros: number = 0;
 
   // filtro
   public filtroListaPaginada: FiltroListaPaginada = new FiltroListaPaginada();
@@ -104,10 +104,10 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     this.usuarioService.getListaPaginada(this.filtroListaPaginada).subscribe({
       next: (data) => {
         this.usuarios = data.content;
-        this.first = data.first;
-        this.last = data.last;
-        this.numberOfElements = data.numberOfElements;
-        this.totalElements = data.totalElements;
+        this.primeiraPagina = data.first;
+        this.ultimaPagina = data.last;
+        this.numeroDeRegistros = data.numberOfElements;
+        this.totalRegistros = data.totalElements;
       },
       error: (err) => {
         console.error(err);
@@ -119,8 +119,8 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     this.getLista();
   }
 
-  atualizarPagina(page: number) {
-    this.filtroListaPaginada.pagina = page;
+  atualizarPagina() {
+    this.filtroListaPaginada.pagina = this.pagina - 1;
     this.refresh();
   }
 

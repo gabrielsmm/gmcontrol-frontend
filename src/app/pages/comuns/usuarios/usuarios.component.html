@@ -103,22 +103,19 @@
               </div>
               <div class="row d-flex justify-content-between align-items-center">
                 <div class="ml-2" style="font-size: 14px;">
-                  <p>Exibindo {{numberOfElements}} de {{totalElements}} registros</p>
+                  <p>Exibindo {{numeroDeRegistros}} de {{totalRegistros}} registros</p>
                 </div>
                 <div class="mr-2">
-                  <nav>
-                    <ul class="pagination">
-                      <li class="page-item" [ngClass]="{'disabled': first}">
-                        <button class="page-link" (click)="atualizarPagina(filtroListaPaginada.pagina - 1)">Anterior</button>
-                      </li>
-                      <li class="page-item disabled">
-                        <span class="page-link">{{filtroListaPaginada.pagina + 1}}</span>
-                      </li>
-                      <li class="page-item" [ngClass]="{'disabled': last}">
-                        <button class="page-link" (click)="atualizarPagina(filtroListaPaginada.pagina + 1)">Próxima</button>
-                      </li>
-                    </ul>
-                  </nav>
+                  <ngb-pagination
+                    [(page)]="pagina"
+                    [pageSize]="filtroListaPaginada.registrosPorPagina"
+                    [collectionSize]="totalRegistros"
+                    [maxSize]="5"
+                    [rotate]="true"
+                    [ellipses]="false"
+                    [boundaryLinks]="true"
+                    (pageChange)="atualizarPagina()">
+                  </ngb-pagination>
                 </div>
               </div>
             </div>
