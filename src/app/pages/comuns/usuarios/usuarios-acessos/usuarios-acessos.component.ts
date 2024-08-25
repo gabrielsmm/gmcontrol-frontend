@@ -2,25 +2,28 @@ import { UsuarioModuloAcesso } from '@/models/usuario-modulo-acesso.model';
 import { Usuario } from '@/models/usuario.model';
 
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppService } from '@services/app.service';
 import { UsuarioModuloService } from '@services/usuario-modulo.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-usuarios-modulos',
+  selector: 'app-usuarios-acessos',
   standalone: true,
-  imports: [],
-  templateUrl: './usuarios-modulos.component.html',
-  styleUrl: './usuarios-modulos.component.scss'
+  imports: [
+    NgbModule
+  ],
+  templateUrl: './usuarios-acessos.component.html',
+  styleUrl: './usuarios-acessos.component.scss'
 })
-export class UsuariosModulosComponent implements OnInit, OnDestroy {
+export class UsuariosAcessosComponent implements OnInit, OnDestroy {
 
   @Input() usuario: Usuario;
 
   activeModal = inject(NgbActiveModal);
 
   public usuariosModulos: UsuarioModuloAcesso[] = [];
+  public tabIndex = 1;
 
   constructor(private usuarioModuloService: UsuarioModuloService,
               private toastr: ToastrService,
@@ -30,7 +33,7 @@ export class UsuariosModulosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getLista();
+    this.getListaModulos();
   }
 
   ngOnDestroy(): void {
@@ -38,7 +41,7 @@ export class UsuariosModulosComponent implements OnInit, OnDestroy {
     // TODO: Notificar menu-sidebar para recarregar a lista do menu
   }
 
-  private getLista() {
+  private getListaModulos() {
     this.usuarioModuloService.getListaModulos(this.usuario.id).subscribe({
       next: (data) => {
         this.usuariosModulos = data as Array<UsuarioModuloAcesso>;
@@ -58,13 +61,22 @@ export class UsuariosModulosComponent implements OnInit, OnDestroy {
     this.usuarioModuloService.atualizarAcesso(this.usuario.id, modulo).subscribe({
       next: () => {
         this.toastr.success('Acesso atualizado com sucesso!');
-        this.getLista();
+        this.getListaModulos();
+        if (modulo.codigo == 1 && modulo.possuiAcesso) { // Membresia cristã
+          setTimeout(() => {
+            this.tabIndex = 2;
+          }, 500);
+        }
       },
       error: (err) => {
         console.error('Erro ao atualizar o acesso do usuário:', err);
         this.toastr.error('Erro ao atualizar o acesso do usuário!');
       }
     });
+  }
+
+  get possuiAcessoMembresiaCrista(): boolean {
+    return this.usuariosModulos.some(m => m.codigo == 1 && m.possuiAcesso);
   }
 
   fecharClick(): void {

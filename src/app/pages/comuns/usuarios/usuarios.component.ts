@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalConfirmacaoComponent } from '@components/modal-confirmacao/modal-confirmacao.component';
 import { AppService } from '@services/app.service';
-import { UsuariosModulosComponent } from './usuarios-modulos/usuarios-modulos.component';
+import { UsuariosAcessosComponent } from './usuarios-acessos/usuarios-acessos.component';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
@@ -199,6 +199,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
         this.toastr.success('Usuário inserido com sucesso!');
         this.stateAtual = State.StateGrid;
         this.operacaoCadastro = null;
+        // Abrir acessos do usuário
         this.getLista();
       },
       error: (err) => {
@@ -254,8 +255,8 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     this.operacaoCadastro = null;
   }
 
-  openModulos(usuario: Usuario) {
-    const modalRef = this.modalService.open(UsuariosModulosComponent, { size: 'lg' });
+  openAcessos(usuario: Usuario) {
+    const modalRef = this.modalService.open(UsuariosAcessosComponent, { size: 'lg' });
     modalRef.componentInstance.usuario = usuario;
   }
 
