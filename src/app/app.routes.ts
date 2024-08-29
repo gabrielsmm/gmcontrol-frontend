@@ -34,6 +34,10 @@ export const APP_ROUTES: Routes = [
             loadComponent: () => import('./pages/comuns/usuarios/usuarios.component').then(m => m.UsuariosComponent)
           },
           {
+            path: 'igrejas',
+            loadComponent: () => import('./pages/comuns/igrejas/igrejas.component').then(m => m.IgrejasComponent)
+          },
+          {
             path: 'membresia-crista',
             loadChildren: () => import('./pages/membresia-crista/membresia-crista.routes').then(m => m.MEMBRESIA_CRISTA_ROUTES)
           }

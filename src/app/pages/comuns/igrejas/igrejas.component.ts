@@ -1,40 +1,37 @@
-import { OperacaoCadastro } from '../../../models/enums/operacao-cadastro.enum';
+import { OperacaoCadastro } from '@/models/enums/operacao-cadastro.enum';
 import { State } from '@/models/enums/state.enum';
-import { Usuario } from '@/models/usuario.model';
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { UsuarioService } from '@services/usuario.service';
-import { ToastrService } from 'ngx-toastr';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { ModalConfirmacaoComponent } from '@components/modal-confirmacao/modal-confirmacao.component';
-import { AppService } from '@services/app.service';
-import { UsuariosAcessosComponent } from './usuarios-acessos/usuarios-acessos.component';
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
-import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
+import { Igreja } from '@/models/igreja.model';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLinkWithHref } from '@angular/router';
+import { ModalConfirmacaoComponent } from '@components/modal-confirmacao/modal-confirmacao.component';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AppService } from '@services/app.service';
+import { IgrejaService } from '@services/igreja.service';
+import { ToastrService } from 'ngx-toastr';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-usuarios',
-  templateUrl: './usuarios.component.html',
-  styleUrl: './usuarios.component.scss',
+  selector: 'app-igrejas',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatTooltipModule,
     RouterLinkWithHref,
     NgbModule
-  ]
+  ],
+  templateUrl: './igrejas.component.html',
+  styleUrl: './igrejas.component.scss'
 })
-export class UsuariosComponent implements OnInit, OnDestroy {
+export class IgrejasComponent implements OnInit, OnDestroy {
 
   public State = State;
   public stateAtual: State = State.StateGrid;
   public operacaoCadastro: OperacaoCadastro = null;
-  public usuarios: Usuario[] = [];
+  public igrejas: Igreja[] = [];
 
   // paginação
   public pagina: number = 1;
@@ -51,21 +48,17 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   public dadosForm: UntypedFormGroup = new UntypedFormGroup({
     id: new UntypedFormControl(null, Validators.required),
     nome: new UntypedFormControl(null, Validators.required),
-    email: new UntypedFormControl(null, Validators.required),
-    nomeUsuario: new UntypedFormControl(null, Validators.required),
-    senha: new UntypedFormControl(null, Validators.required),
-    status: new UntypedFormControl(1, Validators.required),
-    perfis: new UntypedFormArray([
-      new UntypedFormControl(), // Perfil 1
-      new UntypedFormControl(), // Perfil 2
-      new UntypedFormControl()  // Perfil 3
-    ])
+    endereco: new UntypedFormControl(null),
+    cidade: new UntypedFormControl(null),
+    estado: new UntypedFormControl(null),
+    cep: new UntypedFormControl(null),
+    telefone: new UntypedFormControl(null),
+    email: new UntypedFormControl(null),
+    dataFundacao: new UntypedFormControl(null),
+    representante: new UntypedFormControl(null),
+    site: new UntypedFormControl(null),
+    observacoes: new UntypedFormControl(null)
   });
-
-  public listaStatus = [
-    { id: 1, descricao: 'Ativo' },
-    { id: 2, descricao: 'Inativo' }
-  ];
 
   public listaQuantidadeRegistros = [10, 30, 50, 70, 90, 120];
 
@@ -78,7 +71,9 @@ export class UsuariosComponent implements OnInit, OnDestroy {
 
   private modalService = inject(NgbModal);
 
-  constructor(private usuarioService: UsuarioService,
+  model1: string;
+
+  constructor(private igrejaService: IgrejaService,
               private toastr: ToastrService,
               private appService: AppService
   ) {
@@ -101,9 +96,9 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
 
   private getLista() {
-    this.usuarioService.getListaPaginada(this.filtroListaPaginada).subscribe({
+    this.igrejaService.getListaPaginada(this.filtroListaPaginada).subscribe({
       next: (data) => {
-        this.usuarios = data.content;
+        this.igrejas = data.content;
         this.primeiraPagina = data.first;
         this.ultimaPagina = data.last;
         this.numeroDeRegistros = data.numberOfElements;
@@ -160,59 +155,37 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     this.operacaoCadastro = OperacaoCadastro.INSERIR;
   }
 
-  alterarClick(usuario: Usuario) {
-    this.usuarioService.getDados(usuario.id).subscribe({
+  alterarClick(igreja: Igreja) {
+    this.igrejaService.getDados(igreja.id).subscribe({
       next: (data) => {
-        const usuarioRecuperado = data as Usuario;
+        const igrejaRecuperada = data as Igreja;
         this.stateAtual = State.StateDados;
         this.operacaoCadastro = OperacaoCadastro.ALTERAR;
         this.dadosForm.patchValue({
-          id: usuarioRecuperado.id,
-          nome: usuarioRecuperado.nome,
-          email: usuarioRecuperado.email,
-          nomeUsuario: usuarioRecuperado.nomeUsuario,
-          senha: usuarioRecuperado.senha,
-          status: usuarioRecuperado.status
+          id: igrejaRecuperada.id,
+          nome: igrejaRecuperada.nome
         });
-        this.markPerfis(usuarioRecuperado.perfis);
       },
       error: (err) => {
         console.error(err);
-        this.toastr.error('Erro ao buscar as informações do usuário!');
+        this.toastr.error('Erro ao buscar as informações da igreja!');
       }
     });
   }
 
   salvarClick() {
-    let usuario = new Usuario(this.dadosForm.value);
-    usuario.perfis = usuario.perfis.filter(item => item !== null);
+    let igreja = new Igreja(this.dadosForm.value);
     if (this.ehInserir()) {
-      this.inserirUsuario(usuario);
+      this.inserirIgreja(igreja);
     } else {
-      this.alterarUsuario(usuario);
+      this.alterarIgreja(igreja);
     }
   }
 
-  private inserirUsuario(usuario: Usuario) {
-    this.usuarioService.inserir(usuario).subscribe({
+  private inserirIgreja(igreja: Igreja) {
+    this.igrejaService.inserir(igreja).subscribe({
       next: (data) => {
-        this.toastr.success('Usuário inserido com sucesso!');
-        this.stateAtual = State.StateGrid;
-        this.operacaoCadastro = null;
-        // Abrir acessos do usuário
-        this.getLista();
-      },
-      error: (err) => {
-        console.error(err);
-        this.toastr.error(this.appService.formatarErrosValidacao(err.error.erros), '', { enableHtml: true });
-      }
-    });
-  }
-
-  private alterarUsuario(usuario: Usuario) {
-    this.usuarioService.alterar(usuario).subscribe({
-      next: (data) => {
-        this.toastr.success('Usuário alterado com sucesso!');
+        this.toastr.success('Igreja inserida com sucesso!');
         this.stateAtual = State.StateGrid;
         this.operacaoCadastro = null;
         this.getLista();
@@ -224,25 +197,40 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     });
   }
 
-  eliminarClick(usuario: Usuario) {
+  private alterarIgreja(igreja: Igreja) {
+    this.igrejaService.alterar(igreja).subscribe({
+      next: (data) => {
+        this.toastr.success('Igreja alterada com sucesso!');
+        this.stateAtual = State.StateGrid;
+        this.operacaoCadastro = null;
+        this.getLista();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error(this.appService.formatarErrosValidacao(err.error.erros), '', { enableHtml: true });
+      }
+    });
+  }
+
+  eliminarClick(igreja: Igreja) {
     const modalRef = this.modalService.open(ModalConfirmacaoComponent);
 
     modalRef.componentInstance.dados = {
       titulo: 'Confirmar exclusão',
-      texto: `Realmente deseja excluir o usuário ${usuario.nome}?`
+      texto: `Realmente deseja excluir a igreja ${igreja.nome}?`
     };
 
     modalRef.result.then(
       (result) => {
         if (result) {
-          this.usuarioService.eliminar(usuario.id).subscribe({
+          this.igrejaService.eliminar(igreja.id).subscribe({
             next: (data) => {
-              this.toastr.success('Usuário excluído com sucesso!');
+              this.toastr.success('Igreja excluída com sucesso!');
               this.getLista();
             },
             error: (err) => {
               console.error(err);
-              this.toastr.error('Erro ao excluir o usuário!');
+              this.toastr.error('Erro ao excluir a igreja!');
             }
           });
         }
@@ -255,50 +243,12 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     this.operacaoCadastro = null;
   }
 
-  openAcessos(usuario: Usuario) {
-    const modalRef = this.modalService.open(UsuariosAcessosComponent, { size: 'lg' });
-    modalRef.componentInstance.usuario = usuario;
-  }
-
   ehInserir(): boolean {
     return this.operacaoCadastro === OperacaoCadastro.INSERIR;
   }
 
   ehAlterar(): boolean {
     return this.operacaoCadastro === OperacaoCadastro.ALTERAR;
-  }
-
-  get perfisFormArray() {
-    return this.dadosForm.get('perfis') as UntypedFormArray;
-  }
-
-  onCheckboxChange(e: any, index: number) {
-    const perfis: UntypedFormArray = this.dadosForm.get('perfis') as UntypedFormArray;
-    const perfilValue = Number(e.target.value);
-
-    if (e.target.checked) {
-      perfis.at(index).setValue(Number(perfilValue));
-    } else {
-      perfis.at(index).setValue(null);
-    }
-  }
-
-  private markPerfis(perfisSelecionados: number[]) {
-    const perfisFormArray = this.dadosForm.get('perfis') as UntypedFormArray;
-
-    perfisFormArray.controls.forEach((control: UntypedFormControl) => {
-      control.setValue(null);
-    });
-
-    perfisSelecionados.forEach((perfilIndex: number) => {
-      if (perfilIndex >= 1 && perfilIndex <= perfisFormArray.length) {
-        perfisFormArray.at(perfilIndex - 1).setValue(perfilIndex);
-      }
-    });
-  }
-
-  displayStatus(status: number): string {
-    return this.listaStatus.find((s) => s.id === status).descricao;
   }
 
 }

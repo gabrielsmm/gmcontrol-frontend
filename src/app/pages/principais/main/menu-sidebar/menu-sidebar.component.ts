@@ -75,7 +75,13 @@ export const MENU = [
       name: 'Usuários',
       iconClasses: 'fas fa-user',
       path: ['/usuarios'],
-      allowedProfiles: [UsuarioPerfil.MASTER, UsuarioPerfil.ADMIN]
+      allowedProfiles: [UsuarioPerfil.MASTER]
+    },
+    {
+      name: 'Igrejas',
+      iconClasses: 'fas fa-place-of-worship',
+      path: ['/igrejas'],
+      allowedProfiles: [UsuarioPerfil.MASTER]
     },
     {
         name: 'Membresia Cristã',

@@ -1,5 +1,5 @@
 import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
-import { Usuario } from '@/models/usuario.model';
+import { Igreja } from '@/models/igreja.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
@@ -8,24 +8,19 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioService {
+export class IgrejaService {
 
   private baseUrl: string = environment.BASE_URL;
 
   constructor(private http: HttpClient) { }
 
   private getApiUrl(): string {
-    return `${this.baseUrl}/usuarios`;
+    return `${this.baseUrl}/igrejas`;
   }
 
-  getUsuarioLogado(): Observable<Usuario>{
-    const url = `${this.getApiUrl()}/usuario-logado`;
-    return this.http.get<Usuario>(url);
-  }
-
-  getDados(id: any): Observable<Usuario>{
+  getDados(id: any): Observable<Igreja>{
     const url = `${this.getApiUrl()}/${id}`;
-    return this.http.get<Usuario>(url);
+    return this.http.get<Igreja>(url);
   }
 
   getListaPaginada(filtro: FiltroListaPaginada): Observable<any>{
@@ -42,14 +37,14 @@ export class UsuarioService {
     return this.http.get<any>(url, { params });
   }
 
-  inserir(usuario: Usuario): Observable<Usuario>{
+  inserir(igreja: Igreja): Observable<Igreja>{
     const url = `${this.getApiUrl()}`;
-    return this.http.post<Usuario>(url, usuario);
+    return this.http.post<Igreja>(url, igreja);
   }
 
-  alterar(usuario: Usuario): Observable<void>{
-    const url = `${this.getApiUrl()}/${usuario.id}`;
-    return this.http.put<void>(url, usuario);
+  alterar(igreja: Igreja): Observable<void>{
+    const url = `${this.getApiUrl()}/${igreja.id}`;
+    return this.http.put<void>(url, igreja);
   }
 
   eliminar(id: number): Observable<void>{
