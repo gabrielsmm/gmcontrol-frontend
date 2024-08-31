@@ -163,7 +163,17 @@ export class IgrejasComponent implements OnInit, OnDestroy {
         this.operacaoCadastro = OperacaoCadastro.ALTERAR;
         this.dadosForm.patchValue({
           id: igrejaRecuperada.id,
-          nome: igrejaRecuperada.nome
+          nome: igrejaRecuperada.nome,
+          endereco: igrejaRecuperada.endereco,
+          cidade: igrejaRecuperada.cidade,
+          estado: igrejaRecuperada.estado,
+          cep: igrejaRecuperada.cep,
+          telefone: igrejaRecuperada.telefone,
+          email: igrejaRecuperada.email,
+          dataFundacao: igrejaRecuperada.dataFundacao,
+          representante: igrejaRecuperada.representante,
+          site: igrejaRecuperada.site,
+          observacoes: igrejaRecuperada.observacoes
         });
       },
       error: (err) => {

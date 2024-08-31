@@ -1,3 +1,5 @@
+import { parseToDate } from "@/utils/date"
+
 export class Igreja {
   id: number
   nome: string
@@ -14,5 +16,9 @@ export class Igreja {
 
   public constructor(init?: Partial<any>) {
     Object.assign(this, init);
+
+    if (typeof this.dataFundacao === 'string') {
+      this.dataFundacao = parseToDate(this.dataFundacao);
+    }
   }
 }

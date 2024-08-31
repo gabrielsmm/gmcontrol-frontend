@@ -1,12 +1,11 @@
 /// <reference types="@angular/localize" />
 
 import { enableProdMode, importProvidersFrom } from '@angular/core';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 
 import {environment} from './environments/environment';
 import { AppComponent } from './app/app.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateAdapter, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToastrModule } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -22,6 +21,7 @@ import { TokenInterceptorService } from '@services/token-interceptor.service';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
 import { APP_ROUTES } from '@/app.routes';
+import { CustomAdapter, CustomDateParserFormatter } from '@/utils/date';
 
 if (environment.NODE_ENV === 'production') {
     enableProdMode();
@@ -40,7 +40,9 @@ bootstrapApplication(AppComponent, {
         provideHttpClient(withInterceptorsFromDi()),
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true },
         provideAnimationsAsync(),
-        provideAnimations()
+        provideAnimations(),
+        {provide: NgbDateAdapter, useClass: CustomAdapter},
+        {provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter}
     ]
 })
 .catch((err) => console.error(err));
