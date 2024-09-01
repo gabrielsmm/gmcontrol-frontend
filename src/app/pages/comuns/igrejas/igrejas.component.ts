@@ -2,14 +2,17 @@ import { OperacaoCadastro } from '@/models/enums/operacao-cadastro.enum';
 import { State } from '@/models/enums/state.enum';
 import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
 import { Igreja } from '@/models/igreja.model';
+import { DatePipe } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLinkWithHref } from '@angular/router';
 import { ModalConfirmacaoComponent } from '@components/modal-confirmacao/modal-confirmacao.component';
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppService } from '@services/app.service';
 import { IgrejaService } from '@services/igreja.service';
+import { ViacepService } from '@services/viacep.service';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
@@ -21,7 +24,11 @@ import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs'
     ReactiveFormsModule,
     MatTooltipModule,
     RouterLinkWithHref,
-    NgbModule
+    NgbPaginationModule,
+    NgbDatepickerModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
+    DatePipe
   ],
   templateUrl: './igrejas.component.html',
   styleUrl: './igrejas.component.scss'
@@ -71,11 +78,10 @@ export class IgrejasComponent implements OnInit, OnDestroy {
 
   private modalService = inject(NgbModal);
 
-  model1: string;
-
   constructor(private igrejaService: IgrejaService,
               private toastr: ToastrService,
-              private appService: AppService
+              private appService: AppService,
+              private viaCepService: ViacepService
   ) {
 
   }
@@ -247,6 +253,31 @@ export class IgrejasComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  getDadosCep(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const cep = input.value.replace(/\D/g, '');
+
+    if (cep.length === 8) {
+      this.viaCepService.getDadosCep(cep).subscribe({
+        next: (data) => {
+          if (data.erro) {
+            this.toastr.error('CEP inválido!');
+          } else {
+            this.dadosForm.patchValue({
+              cidade: data.localidade,
+              estado: data.estado,
+              endereco: `${data.bairro} ${data.logradouro} ${data.complemento}`
+            });
+          }
+        },
+        error: (err) => {
+          console.error('Erro ao buscar os dados do Cep. ' + err);
+        }
+      });
+    }
+  }
+
 
   cancelarClick() {
     this.stateAtual = State.StateGrid;

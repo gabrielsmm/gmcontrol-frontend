@@ -63,6 +63,12 @@
                     <th></th>
                     <th>ID</th>
                     <th>Nome</th>
+                    <th>Cidade</th>
+                    <th>Estado</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Data fundação</th>
+                    <th>Representante</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -82,6 +88,12 @@
                       </td>
                       <td>{{ igreja.id }}</td>
                       <td>{{ igreja.nome }}</td>
+                      <td>{{ igreja.cidade }}</td>
+                      <td>{{ igreja.estado }}</td>
+                      <td>{{ igreja.telefone | mask: '(00)0000-0000' }}</td>
+                      <td>{{ igreja.email }}</td>
+                      <td>{{ igreja.dataFundacao | date: 'dd/MM/yyyy' }}</td>
+                      <td>{{ igreja.representante }}</td>
                     </tr>
                   }
                 </tbody>
@@ -134,21 +146,21 @@
               <div class="row mb-2">
                 <div class="col-md-12">
                   <label for="nome">Nome</label>
-                  <input formControlName="nome" id="nome" type="text" class="form-control" placeholder="Nome"/>
+                  <input formControlName="nome" id="nome" type="text" class="form-control" placeholder="Nome" required/>
                 </div>
               </div>
               <div class="row mb-2">
                 <div class="col-md-3">
                   <label for="cep">CEP</label>
-                  <input formControlName="cep" id="cep" type="text" class="form-control" placeholder="CEP"/>
+                  <input formControlName="cep" id="cep" type="text" class="form-control" placeholder="CEP" mask="00000-000" (keyup)="getDadosCep($event)"/>
                 </div>
                 <div class="col-md-7">
                   <label for="cidade">Cidade</label>
-                  <input formControlName="cidade" id="cidade" type="text" class="form-control" placeholder="Cidade"/>
+                  <input formControlName="cidade" id="cidade" type="text" class="form-control" placeholder="Cidade" [readonly]="true"/>
                 </div>
                 <div class="col-md-2">
                   <label for="estado">Estado</label>
-                  <input formControlName="estado" id="estado" type="text" class="form-control" placeholder="Estado"/>
+                  <input formControlName="estado" id="estado" type="text" class="form-control" placeholder="Estado" [readonly]="true"/>
                 </div>
               </div>
               <div class="row mb-2">
@@ -160,7 +172,7 @@
               <div class="row mb-2">
                 <div class="col-md-3">
                   <label for="telefone">Telefone</label>
-                  <input formControlName="telefone" id="telefone" type="text" class="form-control" placeholder="Telefone"/>
+                  <input formControlName="telefone" id="telefone" type="text" class="form-control" placeholder="Telefone" mask="(00)0000-0000"/>
                 </div>
                 <div class="col-md-9">
                   <label for="email">E-mail</label>

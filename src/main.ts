@@ -22,6 +22,7 @@ import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@a
 import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
 import { APP_ROUTES } from '@/app.routes';
 import { CustomAdapter, CustomDateParserFormatter } from '@/utils/date';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 if (environment.NODE_ENV === 'production') {
     enableProdMode();
@@ -41,6 +42,7 @@ bootstrapApplication(AppComponent, {
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true },
         provideAnimationsAsync(),
         provideAnimations(),
+        provideEnvironmentNgxMask(),
         {provide: NgbDateAdapter, useClass: CustomAdapter},
         {provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter}
     ]
