@@ -1,0 +1,22 @@
+<div class="table-responsive p-0">
+  <table class="table table-head-fixed table-hover text-nowrap">
+    <thead>
+      <tr>
+        <th class="text-center">ID</th>
+        <th>Nome</th>
+        <th class="text-center">Acesso</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (igreja of usuariosIgrejas; track igreja.id) {
+        <tr>
+          <td class="text-center">{{ igreja.id }}</td>
+          <td>{{ igreja.nome }}</td>
+          <td class="text-center">
+            <input type="checkbox" [checked]="igreja.possuiAcesso" (change)="onCheckBoxAcessoChange($event, igreja)">
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

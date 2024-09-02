@@ -1,0 +1,22 @@
+<div class="table-responsive p-0">
+  <table class="table table-head-fixed table-hover text-nowrap">
+    <thead>
+      <tr>
+        <th class="text-center">Código</th>
+        <th>Descrição</th>
+        <th class="text-center">Acesso</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (modulo of usuariosModulos; track modulo.codigo) {
+        <tr>
+          <td class="text-center">{{ modulo.codigo }}</td>
+          <td>{{ modulo.descricao }}</td>
+          <td class="text-center">
+            <input type="checkbox" [checked]="modulo.possuiAcesso" (change)="onCheckBoxAcessoChange($event, modulo)">
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
