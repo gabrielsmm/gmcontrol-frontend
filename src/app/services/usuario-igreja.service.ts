@@ -1,5 +1,6 @@
+import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
 import { UsuarioIgrejaAcesso } from '@/models/usuario-igreja-acesso.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
@@ -17,9 +18,18 @@ export class UsuarioIgrejaService {
     return `${this.baseUrl}/usuarios-igrejas`;
   }
 
-  getListaIgrejas(usuarioId: number): Observable<Array<UsuarioIgrejaAcesso>> {
+  getListaIgrejas(usuarioId: number, filtro: FiltroListaPaginada): Observable<any> {
     const url = `${this.getApiUrl()}/lista-igrejas/${usuarioId}`;
-    return this.http.get<Array<UsuarioIgrejaAcesso>>(url);
+    let params = new HttpParams();
+
+    Object.keys(filtro).forEach(key => {
+      const value = filtro[key as keyof FiltroListaPaginada];
+      if (value !== undefined && value !== null) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    return this.http.get<any>(url, { params });
   }
 
   atualizarAcesso(usuarioId: number, modulo: UsuarioIgrejaAcesso): Observable<void>{

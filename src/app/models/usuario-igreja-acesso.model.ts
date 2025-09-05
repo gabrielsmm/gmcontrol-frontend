@@ -1,6 +1,7 @@
+import { Igreja } from "./igreja.model";
+
 export class UsuarioIgrejaAcesso {
-  id: number
-  nome: string
+  igreja: Igreja
   possuiAcesso: boolean
 
   public constructor(init?: Partial<any>) {

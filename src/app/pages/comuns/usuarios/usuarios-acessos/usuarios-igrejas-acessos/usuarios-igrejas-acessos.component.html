@@ -1,4 +1,30 @@
 <div class="table-responsive p-0">
+  <div class="mb-2">
+    <strong>{{ usuario.nome }}</strong>
+    @if (totalIgrejasComAcesso === 0) {
+      não possui acesso a nenhuma igreja
+    }
+    @if (totalIgrejasComAcesso === 1) {
+      possui acesso a <strong>1</strong> igreja
+    }
+    @if (totalIgrejasComAcesso > 1) {
+      possui acesso a <strong>{{ totalIgrejasComAcesso }}</strong> igrejas
+    }
+  </div>
+  <div class="input-group mb-2">
+    <input
+      type="text"
+      name="filtro"
+      class="form-control float-right"
+      placeholder="Pesquisar"
+      (keyup)="onKeyUpFiltro($event)"
+    >
+    <div class="input-group-append">
+      <button type="submit" class="btn btn-default">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+  </div>
   <table class="table table-head-fixed table-hover text-nowrap">
     <thead>
       <tr>
@@ -8,15 +34,37 @@
       </tr>
     </thead>
     <tbody>
-      @for (igreja of usuariosIgrejas; track igreja.id) {
+      @for (usuariosIgrejas of usuariosIgrejas; track usuariosIgrejas.igreja.id) {
         <tr>
-          <td class="text-center">{{ igreja.id }}</td>
-          <td>{{ igreja.nome }}</td>
+          <td class="text-center">{{ usuariosIgrejas.igreja.id }}</td>
+          <td>{{ usuariosIgrejas.igreja.nome }}</td>
           <td class="text-center">
-            <input type="checkbox" [checked]="igreja.possuiAcesso" (change)="onCheckBoxAcessoChange($event, igreja)">
+            <input
+              type="checkbox"
+              [checked]="usuariosIgrejas.possuiAcesso"
+              (change)="onCheckBoxAcessoChange($event, usuariosIgrejas)"
+            >
           </td>
         </tr>
       }
     </tbody>
   </table>
+  <div class="d-flex justify-content-between align-items-center">
+    <div style="font-size: 14px;">
+      <p>Exibindo {{numeroDeRegistros}} de {{totalRegistros}} registros</p>
+    </div>
+    <div>
+      <ngb-pagination
+        [(page)]="pagina"
+        [pageSize]="filtroListaPaginada.registrosPorPagina"
+        [collectionSize]="totalRegistros"
+        [maxSize]="5"
+        [rotate]="true"
+        [ellipses]="false"
+        [boundaryLinks]="true"
+        (pageChange)="atualizarPagina()"
+      >
+      </ngb-pagination>
+    </div>
+  </div>
 </div>
