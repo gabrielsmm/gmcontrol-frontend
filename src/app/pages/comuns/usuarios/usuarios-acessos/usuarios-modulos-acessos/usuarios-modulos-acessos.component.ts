@@ -43,12 +43,15 @@ export class UsuariosModulosAcessosComponent implements OnInit {
   }
 
   onCheckBoxAcessoChange(e: Event, modulo: UsuarioModuloAcesso) {
+    this.toastr.clear();
     const isChecked = (e.target as HTMLInputElement).checked;
     modulo.possuiAcesso = isChecked;
 
     this.usuarioModuloService.atualizarAcesso(this.usuario.id, modulo).subscribe({
       next: () => {
-        this.toastr.success('Acesso atualizado com sucesso!');
+        setTimeout(() => {
+          this.toastr.success('Acesso atualizado com sucesso!');
+        }, 500);
         this.getListaModulos();
         if (modulo.codigo == 1 && modulo.possuiAcesso) { // Membresia cristã
           setTimeout(() => {

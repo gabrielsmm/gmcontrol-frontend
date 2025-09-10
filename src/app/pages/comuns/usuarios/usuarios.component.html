@@ -60,18 +60,23 @@
               <table class="table table-head-fixed table-hover text-nowrap">
                 <thead>
                   <tr>
-                    <th></th>
                     <th>ID</th>
                     <th>Nome</th>
                     <th>Usuário (login)</th>
                     <th>E-mail</th>
                     <th>Status</th>
+                    <th style="width: 120px;">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   @for (usuario of usuarios; track usuario.id) {
                     <tr>
-                      <td>
+                      <td>{{ usuario.id }}</td>
+                      <td>{{ usuario.nome }}</td>
+                      <td>{{ usuario.nomeUsuario }}</td>
+                      <td>{{ usuario.email }}</td>
+                      <td>{{ displayStatus(usuario.status) }}</td>
+                      <td class="pr-2">
                         <button (click)="alterarClick(usuario)"
                           class="btn btn-sm btn-warning"
                           matTooltip="Alterar">
@@ -88,11 +93,6 @@
                           <i class="fas fa-sign-in-alt"></i>
                         </button>
                       </td>
-                      <td>{{ usuario.id }}</td>
-                      <td>{{ usuario.nome }}</td>
-                      <td>{{ usuario.nomeUsuario }}</td>
-                      <td>{{ usuario.email }}</td>
-                      <td>{{ displayStatus(usuario.status) }}</td>
                     </tr>
                   }
                 </tbody>
@@ -166,32 +166,34 @@
                   <input formControlName="senha" id="senha" type="password" class="form-control" placeholder="Senha"/>
                 </div>
               </div>
-              <div class="row mb-2">
+              <div class="row">
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="status">Status</label>
-                    <select formControlName="status" class="form-control" id="status">
-                      <option value="1">Ativo</option>
-                      <option value="2">Inativo</option>
-                    </select>
+                    <label class="d-block mb-1">Status</label>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="status" id="statusAtivo" formControlName="status" [value]="UsuarioStatus.ATIVO">
+                      <label class="form-check-label" for="statusAtivo">Ativo</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="status" id="statusInativo" formControlName="status" [value]="UsuarioStatus.INATIVO">
+                      <label class="form-check-label" for="statusInativo">Inativo</label>
+                    </div>
                   </div>
                 </div>
               </div>
               <div class="row mb-2">
                 <div class="col-md-12" formArrayName="perfis">
-                  <label class="d-block">Perfis</label>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" formControlName="0" value="1" (change)="onCheckboxChange($event, 0)">
-                    <label class="form-check-label" for="master">Master</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" formControlName="1" value="2" (change)="onCheckboxChange($event, 1)">
-                    <label class="form-check-label" for="admin">Administrador</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" formControlName="2" value="3" (change)="onCheckboxChange($event, 2)">
-                    <label class="form-check-label" for="usuario">Usuário</label>
-                  </div>
+                  <label class="d-block">Selecione os perfis a serem atribuídos ao usuário</label>
+                  @if (perfisFormArray.length === listaPerfis.length) {
+                    @for (perfil of listaPerfis; track perfil.id; let i = $index) {
+                      <div class="form-check form-check-inline">
+                        <input type="checkbox"
+                              class="form-check-input"
+                              [formControlName]="i">
+                        <label class="form-check-label">{{ perfil.nome }}</label>
+                      </div>
+                    }
+                  }
                 </div>
               </div>
             </form>

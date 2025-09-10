@@ -1,20 +1,22 @@
-import { UsuarioStatus } from './../../../models/enums/usuario-status.enum';
-import { OperacaoCadastro } from '../../../models/enums/operacao-cadastro.enum';
 import { State } from '@/models/enums/state.enum';
+import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
+import { Perfil } from '@/models/perfil.model';
 import { Usuario } from '@/models/usuario.model';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterLinkWithHref } from '@angular/router';
+import { ModalConfirmacaoComponent } from '@components/modal-confirmacao/modal-confirmacao.component';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AppService } from '@services/app.service';
 import { UsuarioService } from '@services/usuario.service';
 import { ToastrService } from 'ngx-toastr';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { ModalConfirmacaoComponent } from '@components/modal-confirmacao/modal-confirmacao.component';
-import { AppService } from '@services/app.service';
-import { UsuariosAcessosComponent } from './usuarios-acessos/usuarios-acessos.component';
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FiltroListaPaginada } from '@/models/filtro-lista-paginada.model';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
-import { RouterLinkWithHref } from '@angular/router';
+import { OperacaoCadastro } from '../../../models/enums/operacao-cadastro.enum';
+import { UsuarioStatus } from './../../../models/enums/usuario-status.enum';
+import { PerfilService } from './../../../services/perfil.service';
+import { UsuariosAcessosComponent } from './usuarios-acessos/usuarios-acessos.component';
 
 @Component({
   selector: 'app-usuarios',
@@ -32,6 +34,7 @@ import { RouterLinkWithHref } from '@angular/router';
 })
 export class UsuariosComponent implements OnInit, OnDestroy {
 
+  public UsuarioStatus = UsuarioStatus;
   public State = State;
   public stateAtual: State = State.StateGrid;
   public operacaoCadastro: OperacaoCadastro = null;
@@ -49,24 +52,9 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   private filtroSubject = new Subject<string>();
   private filtroSubscription = new Subscription();
 
-  public dadosForm: UntypedFormGroup = new UntypedFormGroup({
-    id: new UntypedFormControl(null, Validators.required),
-    nome: new UntypedFormControl(null, Validators.required),
-    email: new UntypedFormControl(null, Validators.required),
-    nomeUsuario: new UntypedFormControl(null, Validators.required),
-    senha: new UntypedFormControl(null, Validators.required),
-    status: new UntypedFormControl(1, Validators.required),
-    perfis: new UntypedFormArray([
-      new UntypedFormControl(), // Perfil 1
-      new UntypedFormControl(), // Perfil 2
-      new UntypedFormControl()  // Perfil 3
-    ])
-  });
+  public dadosForm: FormGroup;
 
-  public listaStatus = [
-    { id: 1, descricao: 'Ativo' },
-    { id: 2, descricao: 'Inativo' }
-  ];
+  public listaPerfis: Perfil[] = [];
 
   public listaQuantidadeRegistros = [10, 30, 50, 70, 90, 120];
 
@@ -80,10 +68,20 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   private modalService = inject(NgbModal);
 
   constructor(private usuarioService: UsuarioService,
+              private perfilService: PerfilService,
               private toastr: ToastrService,
-              private appService: AppService
+              private appService: AppService,
+              private fb: FormBuilder
   ) {
-
+    this.dadosForm = this.fb.group({
+      id: [null],
+      nome: [null, Validators.required],
+      email: [null, [Validators.required, Validators.email]],
+      nomeUsuario: [null, Validators.required],
+      senha: [null],
+      status: [UsuarioStatus.ATIVO, Validators.required],
+      perfis: this.fb.array([])
+    });
   }
 
   ngOnInit(): void {
@@ -154,19 +152,21 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
 
   inserirClick() {
-    this.dadosForm.reset({
-      status: 1
-    });
+    this.dadosForm.reset({ status: UsuarioStatus.ATIVO });
+    (this.dadosForm.get('perfis') as FormArray).clear();
     this.stateAtual = State.StateDados;
     this.operacaoCadastro = OperacaoCadastro.INSERIR;
+    this.getPerfisDisponiveis();
   }
 
   alterarClick(usuario: Usuario) {
     this.usuarioService.getDados(usuario.id).subscribe({
       next: (data) => {
         const usuarioRecuperado = data as Usuario;
+        (this.dadosForm.get('perfis') as FormArray).clear();
         this.stateAtual = State.StateDados;
         this.operacaoCadastro = OperacaoCadastro.ALTERAR;
+
         this.dadosForm.patchValue({
           id: usuarioRecuperado.id,
           nome: usuarioRecuperado.nome,
@@ -175,8 +175,8 @@ export class UsuariosComponent implements OnInit, OnDestroy {
           senha: usuarioRecuperado.senha,
           status: usuarioRecuperado.status
         });
-        // TODO: Pensar em uma forma melhor de fazer essa marcação dos perfis
-        // this.markPerfis(usuarioRecuperado.perfis);
+
+        this.getPerfisDisponiveis(usuarioRecuperado.perfis);
       },
       error: (err) => {
         console.error(err);
@@ -186,8 +186,17 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
 
   salvarClick() {
-    let usuario = new Usuario(this.dadosForm.value);
-    usuario.perfis = usuario.perfis.filter(item => item !== null);
+    const formValue = this.dadosForm.value;
+
+    const perfisSelecionados = formValue.perfis
+      .map((marcado: boolean, i: number) => marcado ? this.listaPerfis[i].id : null)
+      .filter((id: number | null) => id !== null);
+
+    let usuario = new Usuario({
+      ...formValue,
+      perfis: perfisSelecionados
+    });
+
     if (this.ehInserir()) {
       this.inserirUsuario(usuario);
     } else {
@@ -274,15 +283,27 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     return this.dadosForm.get('perfis') as UntypedFormArray;
   }
 
-  onCheckboxChange(e: any, index: number) {
-    const perfis: UntypedFormArray = this.dadosForm.get('perfis') as UntypedFormArray;
-    const perfilValue = Number(e.target.value);
+  private getPerfisDisponiveis(perfisUsuario?: Perfil[]) {
+    this.perfilService.getPerfis().subscribe({
+      next: (data) => {
+        this.listaPerfis = data;
+        this.carregarPerfis(perfisUsuario || []);
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Erro ao carregar lista de perfis!');
+      }
+    });
+  }
 
-    if (e.target.checked) {
-      perfis.at(index).setValue(Number(perfilValue));
-    } else {
-      perfis.at(index).setValue(null);
-    }
+  carregarPerfis(perfisUsuario: Perfil[]) {
+    const perfisFormArray = this.dadosForm.get('perfis') as FormArray;
+    perfisFormArray.clear();
+
+    this.listaPerfis.forEach(perfil => {
+      const marcado = perfisUsuario.some(p => p.id === perfil.id);
+      perfisFormArray.push(this.fb.control(marcado)); // true ou false
+    });
   }
 
   private markPerfis(perfisSelecionados: number[]) {
