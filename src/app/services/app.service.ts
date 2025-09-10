@@ -48,7 +48,18 @@ export class AppService {
   // Operações referentes aos perfis do usuário
   getPerfisUsuarioLogado(): UsuarioPerfil[] {
     if (!this.usuarioLogado) return [];
-    return this.usuarioLogado.perfis.map(perfil => perfil as UsuarioPerfil);
+    return this.usuarioLogado.perfis
+      .map(perfil => {
+        switch (perfil.id) {
+          case 1: return UsuarioPerfil.MASTER;
+          case 2: return UsuarioPerfil.ADMIN;
+          case 3: return UsuarioPerfil.TESOUREIRO;
+          case 4: return UsuarioPerfil.PASTOR;
+          case 5: return UsuarioPerfil.SECRETARIO;
+          case 6: return UsuarioPerfil.USUARIO;
+          default: return null;
+        }
+      }).filter(perfil => perfil !== null) as UsuarioPerfil[];
   }
 
   usuarioPossuiPerfil(perfil: UsuarioPerfil): boolean {
@@ -64,7 +75,13 @@ export class AppService {
   // Operações referentes aos módulos do usuário
   getModulosUsuarioLogado(): UsuarioModulo[] {
     if (!this.usuarioLogado) return [];
-    return this.usuarioLogado.usuarioModulos.map(modulo => modulo as UsuarioModulo);
+    return this.usuarioLogado.modulos
+      .map(modulo => {
+        switch (modulo.id) {
+          case 1: return UsuarioModulo.MEMBRESIA_CRISTA;
+          default: return null;
+        }
+      }).filter(modulo => modulo !== null) as UsuarioModulo[];
   }
 
   usuarioPossuiModulo(modulo: UsuarioModulo): boolean {

@@ -1,18 +1,17 @@
-import {
-    Component,
-    OnInit,
-    OnDestroy,
-    Renderer2,
-    HostBinding
-} from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import {ToastrService} from 'ngx-toastr';
-import {AppService} from '@services/app.service';
-import { AuthService } from '@services/auth.service';
-import { Usuario } from '@/models/usuario.model';
 import { HttpResponse } from '@angular/common/http';
+import {
+  Component,
+  HostBinding,
+  OnDestroy,
+  OnInit,
+  Renderer2
+} from '@angular/core';
+import { ReactiveFormsModule, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ProfabricComponentsModule } from '@profabric/angular-components';
+import { AppService } from '@services/app.service';
+import { AuthService } from '@services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-login',
@@ -24,7 +23,6 @@ import { ProfabricComponentsModule } from '@profabric/angular-components';
 export class LoginComponent implements OnInit, OnDestroy {
     @HostBinding('class') class = 'login-box';
 
-    public usuario: Usuario = new Usuario();
     public loginForm: UntypedFormGroup;
     public isAuthLoading = false;
 
@@ -53,9 +51,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this.usuario = new Usuario(this.loginForm.value);
+        const credenciais = this.loginForm.value;
         this.isAuthLoading = true;
-        this.authService.login(this.usuario).subscribe({
+        this.authService.login(credenciais).subscribe({
           next: (data: HttpResponse<any>) => {
             const token = data.headers.get('Authorization');
             if (token) {

@@ -1,3 +1,4 @@
+import { UsuarioStatus } from './../../../models/enums/usuario-status.enum';
 import { OperacaoCadastro } from '../../../models/enums/operacao-cadastro.enum';
 import { State } from '@/models/enums/state.enum';
 import { Usuario } from '@/models/usuario.model';
@@ -174,7 +175,8 @@ export class UsuariosComponent implements OnInit, OnDestroy {
           senha: usuarioRecuperado.senha,
           status: usuarioRecuperado.status
         });
-        this.markPerfis(usuarioRecuperado.perfis);
+        // TODO: Pensar em uma forma melhor de fazer essa marcação dos perfis
+        // this.markPerfis(usuarioRecuperado.perfis);
       },
       error: (err) => {
         console.error(err);
@@ -297,8 +299,15 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     });
   }
 
-  displayStatus(status: number): string {
-    return this.listaStatus.find((s) => s.id === status).descricao;
+  displayStatus(status: UsuarioStatus): string {
+    switch (status) {
+      case UsuarioStatus.ATIVO:
+        return 'Ativo';
+      case UsuarioStatus.INATIVO:
+        return 'Inativo';
+      default:
+        return '';
+    }
   }
 
 }
