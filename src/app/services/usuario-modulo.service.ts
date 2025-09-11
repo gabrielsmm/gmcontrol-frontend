@@ -13,18 +13,16 @@ export class UsuarioModuloService {
 
   constructor(private http: HttpClient) { }
 
-  private getApiUrl(): string {
-    return `${this.baseUrl}/usuarios-modulos`;
+  private getApiUrl(usuarioId: number): string {
+    return `${this.baseUrl}/usuarios/${usuarioId}/modulos`;
   }
 
   getListaModulos(usuarioId: number): Observable<Array<UsuarioModuloAcesso>> {
-    const url = `${this.getApiUrl()}/lista-modulos/${usuarioId}`;
-    return this.http.get<Array<UsuarioModuloAcesso>>(url);
+    return this.http.get<Array<UsuarioModuloAcesso>>(this.getApiUrl(usuarioId));
   }
 
-  atualizarAcesso(usuarioId: number, modulo: UsuarioModuloAcesso): Observable<void>{
-    const url = `${this.getApiUrl()}/atualizar-acesso/${usuarioId}`;
-    return this.http.post<void>(url, modulo);
+  atualizarAcesso(usuarioId: number, modulo: UsuarioModuloAcesso): Observable<void> {
+    return this.http.put<void>(this.getApiUrl(usuarioId), modulo);
   }
 
 }
